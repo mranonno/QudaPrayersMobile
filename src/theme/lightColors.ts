@@ -1,5 +1,5 @@
 export const lightColors = {
-  background: "#edf0f5",
+  background: "#FDFDFD",
   card: "#FFFFFF",
   primary: "#006666",
   text: "#1A1A1A",

@@ -15,11 +15,11 @@ const StackNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
+        options={{
+          header: () => <HomeScreenHeader />,
+        }}
         name="Home"
         component={HomeScreen}
-        options={() => ({
-          header: () => <HomeScreenHeader />,
-        })}
       />
     </Stack.Navigator>
   );

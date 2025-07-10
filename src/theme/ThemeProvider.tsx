@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  ReactNode,
+} from "react";
+import { useColorScheme } from "react-native";
 import { darkColors } from "./darkColors";
 import { lightColors } from "./lightColors";
 
@@ -6,14 +13,17 @@ type ThemeType = "light" | "dark";
 
 interface ThemeContextProps {
   theme: ThemeType;
-  colors: typeof lightColors | typeof darkColors;
+  colors: typeof lightColors;
   toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<ThemeType>("light");
+  const systemTheme = useColorScheme();
+  const [theme, setTheme] = useState<ThemeType>(
+    systemTheme === "dark" ? "dark" : "light"
+  );
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
@@ -21,10 +31,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   const colors = theme === "light" ? lightColors : darkColors;
 
+  const value = useMemo(() => ({ theme, colors, toggleTheme }), [theme]);
+
   return (
-    <ThemeContext.Provider value={{ theme, colors, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 };
 

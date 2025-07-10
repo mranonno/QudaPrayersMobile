@@ -1,43 +1,53 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../navigation/DrawerNavigator";
+import HamburgerIcon from "../../assets/icons/HamburgerIcon";
+import { useThemeContext } from "../theme/ThemeProvider";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreenHeader = () => {
   const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
+  const { colors } = useThemeContext();
+  const styles = getStyles(colors);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Quda Prayers</Text>
-
-      <TouchableOpacity onPress={() => navigation.openDrawer()}>
-        <Ionicons name="menu" size={24} color="black" />
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.headerContent}>
+        <Image
+          source={require("../../assets/logos/app-logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <HamburgerIcon color={colors.text} />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default HomeScreenHeader;
 
-const styles = StyleSheet.create({
-  container: {
-    height: 56,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    backgroundColor: "#fff",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    marginTop: 50,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#000",
-  },
-});
+const getStyles = (colors: typeof import("../theme/lightColors").lightColors) =>
+  StyleSheet.create({
+    safeArea: {
+      backgroundColor: colors.background,
+    },
+    headerContent: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: colors.card,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      marginHorizontal: 16,
+      borderRadius: 12,
+      elevation: 4,
+    },
+    logo: {
+      width: 100,
+      height: 40,
+    },
+  });
