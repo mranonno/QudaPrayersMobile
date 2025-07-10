@@ -33,5 +33,6 @@ const getStyles = (colors: colors) =>
     text: {
       fontSize: 24,
       marginBottom: 24,
+      color: colors.text,
     },
   });
