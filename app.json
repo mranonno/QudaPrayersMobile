@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "QudaPrayersMobile",
-    "slug": "QudaPrayersMobile",
+    "name": "Quda Prayers",
+    "slug": "quda-prayers",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
