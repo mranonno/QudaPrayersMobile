@@ -2,10 +2,11 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import ThemeSettingScreen from "../screens/ThemeSettingScreen";
-import StackNavigator from "./StackNavigator"; // import stack navigator
+import StackNavigator from "./StackNavigator";
+import { Pressable } from "react-native";
 
 export type DrawerParamList = {
-  HomeStack: undefined; // wrapping Home and Details in a stack
+  HomeStack: undefined;
   ThemeSettings: undefined;
 };
 
@@ -20,6 +21,9 @@ const DrawerNavigator = () => {
         drawerActiveTintColor: "#0a9396",
         drawerLabelStyle: { fontSize: 16 },
         drawerPosition: "right",
+        drawerStyle: {
+          width: 300,
+        },
       }}
     >
       <Drawer.Screen
@@ -35,12 +39,21 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="ThemeSettings"
         component={ThemeSettingScreen}
-        options={{
+        options={({ navigation }) => ({
+          title: "Theme Settings",
+          headerShown: true,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ paddingHorizontal: 16 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="black" />
+            </Pressable>
+          ),
           drawerIcon: ({ color, size }) => (
             <Ionicons name="color-palette-outline" color={color} size={size} />
           ),
-          title: "Theme Settings",
-        }}
+        })}
       />
     </Drawer.Navigator>
   );
