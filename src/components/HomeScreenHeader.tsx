@@ -20,7 +20,10 @@ const HomeScreenHeader = () => {
           style={styles.logo}
           resizeMode="contain"
         />
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        <TouchableOpacity
+          style={styles.hamburgerButton}
+          onPress={() => navigation.openDrawer()}
+        >
           <HamburgerIcon color={colors.text} />
         </TouchableOpacity>
       </View>
@@ -41,13 +44,18 @@ const getStyles = (colors: colors) =>
       justifyContent: "space-between",
       backgroundColor: colors.card,
       paddingVertical: 12,
-      paddingHorizontal: 16,
+      paddingHorizontal: 20,
       marginHorizontal: 16,
       borderRadius: 12,
-      elevation: 4,
+      elevation: 6,
     },
     logo: {
       width: 100,
       height: 40,
+      backgroundColor: "green",
+    },
+    hamburgerButton: {
+      alignItems: "center",
+      justifyContent: "center",
     },
   });
