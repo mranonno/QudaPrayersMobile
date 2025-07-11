@@ -30,7 +30,7 @@ const HomeScreenHeader = () => {
 
 export default HomeScreenHeader;
 
-const getStyles = (colors: typeof import("../theme/lightColors").lightColors) =>
+const getStyles = (colors: colors) =>
   StyleSheet.create({
     safeArea: {
       backgroundColor: colors.background,

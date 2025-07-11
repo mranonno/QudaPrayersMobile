@@ -1,7 +1,7 @@
 export const darkColors = {
   background: "#121212",
   card: "#171c1f",
-  primary: "#006666",
+  primary: "#0a9396", //#006666
   text: "#E0E0E0",
   border: "#2A2A2A",
   mutedText: "#888888",

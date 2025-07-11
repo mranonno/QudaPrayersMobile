@@ -1,10 +1,13 @@
+// src/navigation/DrawerNavigator.tsx
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import ThemeSettingScreen from "../screens/ThemeSettingScreen";
 import StackNavigator from "./StackNavigator";
-import { Pressable } from "react-native";
+import CustomHeader from "../components/CustomHeader";
+import { useThemeContext } from "../theme/ThemeProvider";
 
+// Type safety for navigation
 export type DrawerParamList = {
   HomeStack: undefined;
   ThemeSettings: undefined;
@@ -13,47 +16,54 @@ export type DrawerParamList = {
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const DrawerNavigator = () => {
+  const { colors } = useThemeContext();
+
   return (
     <Drawer.Navigator
       initialRouteName="HomeStack"
       screenOptions={{
         headerShown: false,
-        drawerActiveTintColor: "#0a9396",
-        drawerLabelStyle: { fontSize: 16 },
+        drawerType: "slide",
         drawerPosition: "right",
+        drawerActiveTintColor: colors.primary,
+        drawerInactiveTintColor: colors.text,
+        drawerLabelStyle: { fontSize: 16 },
         drawerStyle: {
           width: 300,
+          backgroundColor: colors.tabBackground,
         },
       }}
     >
+      {/* ✅ Home Stack */}
       <Drawer.Screen
         name="HomeStack"
         component={StackNavigator}
         options={{
-          drawerIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" color={color} size={size} />
-          ),
           title: "Home",
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" size={size} color={color} />
+          ),
         }}
       />
+
+      {/* ✅ Theme Settings */}
       <Drawer.Screen
         name="ThemeSettings"
         component={ThemeSettingScreen}
-        options={({ navigation }) => ({
+        options={{
           title: "Theme Settings",
           headerShown: true,
-          headerLeft: () => (
-            <Pressable
-              onPress={() => navigation.goBack()}
-              style={{ paddingHorizontal: 16 }}
-            >
-              <Ionicons name="arrow-back" size={24} color="black" />
-            </Pressable>
+          header: () => (
+            <CustomHeader
+              title="Theme Settings"
+              showBackButton
+              showDrawerToggle
+            />
           ),
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="color-palette-outline" color={color} size={size} />
+            <Ionicons name="color-palette-outline" size={size} color={color} />
           ),
-        })}
+        }}
       />
     </Drawer.Navigator>
   );

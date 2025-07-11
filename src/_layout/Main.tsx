@@ -1,6 +1,5 @@
-// src/layout/Main.tsx
 import React from "react";
-import { SafeAreaView, StatusBar } from "react-native";
+import { StatusBar, SafeAreaView, StyleSheet } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import AppNavigator from "../navigation/AppNavigator";
 
@@ -8,7 +7,9 @@ const Main = () => {
   const { theme, colors } = useThemeContext();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -20,3 +21,9 @@ const Main = () => {
 };
 
 export default Main;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

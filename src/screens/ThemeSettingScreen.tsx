@@ -1,22 +1,25 @@
 import React from "react";
-import { Text, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
+import Animated from "react-native-reanimated";
+import { useAnimatedBackground } from "../hooks/useAnimatedBackground";
 
 const ThemeSettingScreen = () => {
   const { theme, toggleTheme, colors } = useThemeContext();
   const styles = getStyles(colors);
+  const { animatedStyle } = useAnimatedBackground(colors.background);
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[animatedStyle, styles.container]}>
       <TouchableOpacity
         style={[styles.button, { backgroundColor: colors.primary }]}
         onPress={toggleTheme}
       >
-        <Text style={[styles.text, { color: colors.pureWhite }]}>
+        <Text style={styles.text}>
           Switch to {theme === "light" ? "Dark" : "Light"} Mode
         </Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -28,7 +31,6 @@ const getStyles = (colors: colors) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: colors.background,
     },
     button: {
       padding: 12,
@@ -36,5 +38,6 @@ const getStyles = (colors: colors) =>
     },
     text: {
       fontWeight: "bold",
+      color: colors.pureWhite,
     },
   });

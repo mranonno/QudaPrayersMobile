@@ -1,20 +1,21 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 
-type DrawerParamList = {
-  Home: undefined;
-};
-
-type HomeScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "Home">;
-
 const HomeScreen = () => {
-  const { colors } = useThemeContext();
+  const { theme, toggleTheme, colors } = useThemeContext();
   const styles = getStyles(colors);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>HomeScreen</Text>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: colors.primary }]}
+        onPress={toggleTheme}
+      >
+        <Text style={styles.text}>
+          Switch to {theme === "light" ? "Dark" : "Light"} Mode
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -25,14 +26,18 @@ const getStyles = (colors: colors) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background,
       justifyContent: "center",
       alignItems: "center",
       padding: 16,
+      backgroundColor: "transparent", // ঠিক আছে
     },
     text: {
       fontSize: 24,
       marginBottom: 24,
       color: colors.text,
+    },
+    button: {
+      padding: 12,
+      borderRadius: 8,
     },
   });
