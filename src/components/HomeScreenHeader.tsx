@@ -24,7 +24,7 @@ const HomeScreenHeader = () => {
           style={styles.hamburgerButton}
           onPress={() => navigation.openDrawer()}
         >
-          <HamburgerIcon color={colors.text} />
+          <HamburgerIcon color={colors.text} size={32} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -39,20 +39,25 @@ const getStyles = (colors: colors) =>
       backgroundColor: colors.background,
     },
     headerContent: {
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+      marginHorizontal: 16,
+      minHeight: 56,
+      borderRadius: 12,
+      backgroundColor: colors.card,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      backgroundColor: colors.card,
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      marginHorizontal: 16,
-      borderRadius: 12,
-      elevation: 6,
+      shadowColor: colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 20,
     },
     logo: {
-      width: 100,
-      height: 40,
-      backgroundColor: "green",
+      width: 60,
+      aspectRatio: 1.5,
+      resizeMode: "contain",
     },
     hamburgerButton: {
       alignItems: "center",

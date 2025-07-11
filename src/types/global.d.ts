@@ -11,4 +11,5 @@ interface colors {
   pureBlack: string;
   placeholder: string;
   tabBackground: string;
+  shadow: string;
 }

@@ -18,6 +18,7 @@ type Props = {
 
 const LearnQudaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
   const { colors } = useThemeContext();
+  const styles = getStyles(colors);
 
   const openUrl = (url: string) => {
     Linking.openURL(url).catch((err) =>
@@ -56,35 +57,40 @@ const LearnQudaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
 
 export default LearnQudaPrayers;
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    marginTop: 16,
-    borderRadius: 12,
-    elevation: 6,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  button: {
-    flex: 1,
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingVertical: 12,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 8,
-  },
-  buttonText: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
-});
+const getStyles = (colors: colors) =>
+  StyleSheet.create({
+    container: {
+      padding: 20,
+      marginTop: 16,
+      borderRadius: 12,
+      shadowColor: colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 20,
+    },
+    title: {
+      fontSize: 16,
+      fontWeight: "600",
+      marginBottom: 20,
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      gap: 12,
+    },
+    button: {
+      flex: 1,
+      borderWidth: 1,
+      borderRadius: 12,
+      paddingVertical: 12,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: 8,
+    },
+    buttonText: {
+      fontSize: 14,
+      fontWeight: "500",
+    },
+  });
