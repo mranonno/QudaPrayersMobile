@@ -24,12 +24,6 @@ const HomeScreen = () => {
         <PrayersRegionTime
           countryCode="BD"
           countryFlagUri="https://flagcdn.com/w320/bd.png"
-          nextPrayer={{
-            name: "Fajr",
-            time: "04:49 PM",
-            icon: require("../../assets/icons/fajr.png"),
-            timeRemaining: "In 2 Hours, 47 Minutes",
-          }}
         />
         <LearnQadaPrayers
           videoUrl="https://www.youtube.com/watch?v=example"

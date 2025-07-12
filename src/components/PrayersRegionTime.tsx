@@ -1,26 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
+import { useGlobalContext } from "../context/GlobalContext";
+import { getNextPrayer, NextPrayer } from "../utils/prayerUtils";
 
 type Props = {
   countryCode: string;
   countryFlagUri: string;
-  nextPrayer: {
-    name: string;
-    time: string;
-    icon: any;
-    timeRemaining: string;
-  };
 };
 
 const PrayersRegionTime: React.FC<Props> = ({
   countryCode,
   countryFlagUri,
-  nextPrayer,
 }) => {
   const { colors } = useThemeContext();
   const styles = getStyles(colors);
+  const { prayersData } = useGlobalContext();
+  const [nextPrayer, setNextPrayer] = useState<NextPrayer | null>(null);
+
+  useEffect(() => {
+    if (!prayersData) return;
+
+    const updateNextPrayer = () => {
+      const np = getNextPrayer(prayersData);
+      setNextPrayer(np);
+    };
+
+    updateNextPrayer();
+    const interval = setInterval(updateNextPrayer, 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [prayersData]);
+
+  // if (!nextPrayer) return null;
+
+  console.log("prayers data", nextPrayer);
 
   return (
     <View style={styles.container}>
@@ -40,17 +55,17 @@ const PrayersRegionTime: React.FC<Props> = ({
       {/* Prayer Info */}
       <View style={styles.prayerRow}>
         <View style={styles.left}>
-          <Image source={nextPrayer.icon} style={styles.icon} />
+          <Image source={nextPrayer?.icon} style={styles.icon} />
           <Text style={[styles.prayerName, { color: colors.text }]}>
-            {nextPrayer.name}
+            {nextPrayer?.name}
           </Text>
         </View>
         <View style={styles.right}>
           <Text style={[styles.prayerTime, { color: colors.text }]}>
-            {nextPrayer.time}
+            {nextPrayer?.time}
           </Text>
           <Text style={[styles.remainingTime, { color: colors.mutedText }]}>
-            {nextPrayer.timeRemaining}
+            {nextPrayer?.timeRemaining}
           </Text>
         </View>
       </View>

@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 // Define the PrayerItem type
 export type PrayerItem = {
@@ -16,12 +17,13 @@ export type PrayerItem = {
   status: "Done" | "Pending";
 };
 
-// Define context value type
 type GlobalContextType = {
   prayers: PrayerItem[];
   setPrayers: React.Dispatch<React.SetStateAction<PrayerItem[]>>;
   addPrayer: (prayer: PrayerItem) => void;
   removePrayer: (id: string) => void;
+  loading: boolean;
+  prayersData: Record<string, string> | null;
 };
 
 // Create the context
@@ -32,8 +34,12 @@ const STORAGE_KEY = "qada_prayers";
 // Provider component
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [prayers, setPrayers] = useState<PrayerItem[]>([]);
+  const [prayersData, setPrayersData] = useState<Record<string, string> | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
 
-  // Load prayers from AsyncStorage on mount
+  // Load from AsyncStorage
   useEffect(() => {
     const loadPrayers = async () => {
       try {
@@ -48,7 +54,33 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     loadPrayers();
   }, []);
 
-  // Save prayers to AsyncStorage whenever it changes
+  // Fetch prayer times from Aladhan API
+  useEffect(() => {
+    const fetchPrayerTimes = async () => {
+      try {
+        const res = await axios.get(
+          "https://api.aladhan.com/v1/timingsByAddress",
+          {
+            params: {
+              address: "Dhaka,Bangladesh",
+              method: 8,
+              tune: "2,3,4,5,2,3,4,5,-3",
+            },
+          }
+        );
+        const timings = res.data?.data?.timings;
+        setPrayersData(timings || null);
+      } catch (error) {
+        console.error("❌ Failed to fetch prayer times:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrayerTimes();
+  }, []);
+
+  // Save to AsyncStorage
   useEffect(() => {
     const savePrayers = async () => {
       try {
@@ -60,19 +92,24 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     savePrayers();
   }, [prayers]);
 
-  // Add a new prayer
   const addPrayer = (prayer: PrayerItem) => {
     setPrayers((prev) => [...prev, prayer]);
   };
 
-  // Remove prayer by ID
   const removePrayer = (id: string) => {
     setPrayers((prev) => prev.filter((p) => p.id !== id));
   };
 
   return (
     <GlobalContext.Provider
-      value={{ prayers, setPrayers, addPrayer, removePrayer }}
+      value={{
+        prayers,
+        setPrayers,
+        addPrayer,
+        removePrayer,
+        loading,
+        prayersData,
+      }}
     >
       {children}
     </GlobalContext.Provider>
