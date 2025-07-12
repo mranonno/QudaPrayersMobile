@@ -1,7 +1,7 @@
 export const lightColors = {
   background: "#FDFDFD",
   card: "#FFFFFF",
-  primary: "#0bba71", //#006666
+  primary: "#2ecc71", //#006666
   text: "#1A1A1A",
   border: "#E0E0E0",
   mutedText: "#666666",
@@ -12,5 +12,6 @@ export const lightColors = {
   placeholder: "#888888",
   tabBackground: "#FFFFFF",
   shadow: "#999999",
+  primaryOpacity: "#a5d6a7",
 };
 export type LightColors = typeof lightColors;

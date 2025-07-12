@@ -12,4 +12,5 @@ interface colors {
   placeholder: string;
   tabBackground: string;
   shadow: string;
+  primaryOpacity: string;
 }
