@@ -22,6 +22,7 @@ type GlobalContextType = {
   setPrayers: React.Dispatch<React.SetStateAction<PrayerItem[]>>;
   addPrayer: (prayer: PrayerItem) => void;
   removePrayer: (id: string) => void;
+  updatePrayerStatus: (id: string, status: "Done" | "Pending") => void;
   loading: boolean;
   prayersData: Record<string, string> | null;
 };
@@ -100,6 +101,10 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setPrayers((prev) => prev.filter((p) => p.id !== id));
   };
 
+  const updatePrayerStatus = (id: string, status: "Done" | "Pending") => {
+    setPrayers((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -107,6 +112,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setPrayers,
         addPrayer,
         removePrayer,
+        updatePrayerStatus,
         loading,
         prayersData,
       }}
