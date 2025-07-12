@@ -1,14 +1,16 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import PrayersRegionTime from "../components/PrayersRegionTime";
 import RemainingQadaPrayers from "../components/RemainingQadaPrayers";
-import LearnQadaPrayers from "../components/LearnQudaPrayers";
 import HomeScreenHeader from "../components/HomeScreenHeader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import LearnQadaPrayers from "../components/LearnQadaPrayers";
 
 const HomeScreen = () => {
   const { colors } = useThemeContext();
-  const styles = getStyles(colors);
+  const { top } = useSafeAreaInsets();
+  const styles = getStyles(colors, top);
   const prayerIcons = {
     Fajr: require("../../assets/icons/fajr.png"),
     Dhuhr: require("../../assets/icons/dhuhr.png"),
@@ -17,7 +19,7 @@ const HomeScreen = () => {
     Isha: require("../../assets/icons/isha.png"),
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <HomeScreenHeader />
       <PrayersRegionTime
         countryCode="BD"
@@ -61,17 +63,18 @@ const HomeScreen = () => {
           console.log("Add Qada Prayer clicked");
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default HomeScreen;
 
-const getStyles = (colors: Colors) =>
+const getStyles = (colors: Colors, top: number) =>
   StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: 16,
+      paddingTop: top,
       backgroundColor: colors.background,
     },
   });

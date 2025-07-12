@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Modal,
   View,
@@ -34,7 +34,7 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const { colors } = useThemeContext();
-  const styles = getStyles(colors);
+  const styles = useMemo(() => getStyles(colors), [colors]);
 
   const handleDateConfirm = (date: Date) => {
     setSelectedDate(date);
@@ -137,6 +137,7 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
             mode="date"
             onConfirm={handleDateConfirm}
             onCancel={() => setDatePickerVisible(false)}
+            themeVariant="dark"
           />
         </View>
       </View>
@@ -144,7 +145,7 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   );
 };
 
-const getStyles = (colors: any) =>
+const getStyles = (colors: Colors) =>
   StyleSheet.create({
     overlay: {
       flex: 1,

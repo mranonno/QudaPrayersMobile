@@ -54,7 +54,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     await AsyncStorage.setItem("@theme", newTheme);
   };
 
-  const colors = theme === "light" ? lightColors : darkColors;
+  const colors = useMemo(
+    () => (theme === "light" ? lightColors : darkColors),
+    [theme]
+  );
 
   const value = useMemo(
     () => ({ theme, colors, toggleTheme, isSystem }),

@@ -13,21 +13,19 @@ const HomeScreenHeader = () => {
   const styles = getStyles(colors);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.headerContent}>
-        <Image
-          source={require("../../assets/logos/app-logo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <TouchableOpacity
-          style={styles.hamburgerButton}
-          onPress={() => navigation.openDrawer()}
-        >
-          <HamburgerIcon color={colors.text} size={32} />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <View style={styles.headerContent}>
+      <Image
+        source={require("../../assets/logos/app-logo.png")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+      <TouchableOpacity
+        style={styles.hamburgerButton}
+        onPress={() => navigation.openDrawer()}
+      >
+        <HamburgerIcon color={colors.text} size={30} />
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -35,9 +33,6 @@ export default HomeScreenHeader;
 
 const getStyles = (colors: Colors) =>
   StyleSheet.create({
-    safeArea: {
-      backgroundColor: colors.background,
-    },
     headerContent: {
       paddingVertical: 16,
       paddingHorizontal: 20,
@@ -52,7 +47,6 @@ const getStyles = (colors: Colors) =>
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 20,
-      marginTop: 8,
     },
     logo: {
       width: 60,
