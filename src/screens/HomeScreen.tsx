@@ -2,8 +2,8 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import PrayersRegionTime from "../components/PrayersRegionTime";
-import LearnQudaPrayers from "../components/LearnQudaPrayers";
 import RemainingQadaPrayers from "../components/RemainingQadaPrayers";
+import LearnQadaPrayers from "../components/LearnQudaPrayers";
 
 const HomeScreen = () => {
   const { colors } = useThemeContext();
@@ -27,7 +27,7 @@ const HomeScreen = () => {
           timeRemaining: "In 2 Hours, 47 Minutes",
         }}
       />
-      <LearnQudaPrayers
+      <LearnQadaPrayers
         videoUrl="https://www.youtube.com/watch?v=example"
         bookUrl="https://example.com/qada-prayers-textbook"
       />

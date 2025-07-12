@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Linking,
-  Image,
 } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,7 +15,7 @@ type Props = {
   bookUrl: string;
 };
 
-const LearnQudaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
+const LearnQadaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
   const { colors } = useThemeContext();
   const styles = getStyles(colors);
 
@@ -55,7 +54,7 @@ const LearnQudaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
   );
 };
 
-export default LearnQudaPrayers;
+export default LearnQadaPrayers;
 
 const getStyles = (colors: colors) =>
   StyleSheet.create({

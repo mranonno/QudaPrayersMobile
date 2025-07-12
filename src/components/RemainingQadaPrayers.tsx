@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
@@ -37,6 +38,11 @@ const RemainingQadaPrayers: React.FC<Props> = ({ prayers, onAddPrayer }) => {
   const { colors } = useThemeContext();
   const styles = getStyles(colors);
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const openModal = () => setIsModalVisible(true);
+  const closeModal = () => setIsModalVisible(false);
+
   const renderItem = ({ item }: { item: PrayerItem }) => (
     <View style={styles.row}>
       <View style={styles.left}>
@@ -55,9 +61,7 @@ const RemainingQadaPrayers: React.FC<Props> = ({ prayers, onAddPrayer }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.text }]}>
-        Remaining Qada Prayers
-      </Text>
+      <Text style={styles.title}>Remaining Qada Prayers</Text>
 
       <View style={styles.separator} />
 
@@ -83,9 +87,24 @@ const RemainingQadaPrayers: React.FC<Props> = ({ prayers, onAddPrayer }) => {
         />
       )}
 
-      <TouchableOpacity style={styles.addButton} onPress={onAddPrayer}>
+      <TouchableOpacity style={styles.addButton} onPress={openModal}>
         <Text style={styles.addButtonText}>Add Qada Prayer</Text>
       </TouchableOpacity>
+      <Modal
+        visible={isModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={closeModal} // For Android back button
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>Add Qada Prayer</Text>
+            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+              <Text style={styles.buttonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -106,9 +125,10 @@ const getStyles = (colors: colors) =>
       elevation: 20,
     },
     title: {
+      color: colors.text,
       fontSize: 16,
       fontWeight: "600",
-      marginBottom: 8,
+      marginBottom: 20,
     },
     separator: {
       height: 1,
@@ -169,5 +189,38 @@ const getStyles = (colors: colors) =>
     addButtonText: {
       color: "#fff",
       fontWeight: "600",
+    },
+    closeButton: {
+      marginTop: 20,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      backgroundColor: "#cc0000",
+      borderRadius: 8,
+    },
+    buttonText: {
+      color: "#fff",
+      fontSize: 16,
+    },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: "rgba(0,0,0,0.4)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalContainer: {
+      width: "80%",
+      backgroundColor: "#fff",
+      padding: 24,
+      borderRadius: 10,
+      elevation: 10, // For Android shadow
+      shadowColor: "#000", // For iOS shadow
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 5,
+    },
+    modalText: {
+      fontSize: 18,
+      color: "#333",
+      textAlign: "center",
     },
   });
