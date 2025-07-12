@@ -1,4 +1,3 @@
-// src/components/LearnQudaPrayers.tsx
 import React from "react";
 import {
   View,
@@ -56,7 +55,7 @@ const LearnQadaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
 
 export default LearnQadaPrayers;
 
-const getStyles = (colors: colors) =>
+const getStyles = (colors: Colors) =>
   StyleSheet.create({
     container: {
       padding: 20,

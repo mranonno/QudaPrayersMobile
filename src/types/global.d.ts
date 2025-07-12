@@ -1,16 +1,18 @@
-interface colors {
+interface Colors {
   background: string;
   card: string;
-  primary: string;
-  text: string;
+  tabBackground: string;
   border: string;
+  shadow: string;
+  primary: string;
+  primaryOpacity: string;
+  primaryDisabled: string;
+  text: string;
   mutedText: string;
+  placeholder: string;
   danger: string;
   success: string;
   pureWhite: string;
   pureBlack: string;
-  placeholder: string;
-  tabBackground: string;
-  shadow: string;
-  primaryOpacity: string;
+  modalOverlay: string;
 }

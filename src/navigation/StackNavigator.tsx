@@ -2,7 +2,6 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "../screens/HomeScreen";
-import HomeScreenHeader from "../components/HomeScreenHeader";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -16,7 +15,7 @@ const StackNavigator = () => {
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
         options={{
-          header: () => <HomeScreenHeader />,
+          headerShown: false,
         }}
         name="Home"
         component={HomeScreen}

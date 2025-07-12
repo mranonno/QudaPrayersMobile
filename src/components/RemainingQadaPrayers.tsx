@@ -104,7 +104,7 @@ const RemainingQadaPrayers: React.FC<Props> = ({ prayers, onAddPrayer }) => {
 
 export default RemainingQadaPrayers;
 
-const getStyles = (colors: colors) =>
+const getStyles = (colors: Colors) =>
   StyleSheet.create({
     container: {
       marginTop: 16,
@@ -156,7 +156,7 @@ const getStyles = (colors: colors) =>
       flexDirection: "row",
       alignItems: "center",
       gap: 4,
-      backgroundColor: "#D1FAE5",
+      backgroundColor: colors.primaryOpacity,
       paddingHorizontal: 10,
       paddingVertical: 4,
       borderRadius: 20,

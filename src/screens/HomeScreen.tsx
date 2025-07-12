@@ -4,6 +4,7 @@ import { useThemeContext } from "../theme/ThemeProvider";
 import PrayersRegionTime from "../components/PrayersRegionTime";
 import RemainingQadaPrayers from "../components/RemainingQadaPrayers";
 import LearnQadaPrayers from "../components/LearnQudaPrayers";
+import HomeScreenHeader from "../components/HomeScreenHeader";
 
 const HomeScreen = () => {
   const { colors } = useThemeContext();
@@ -17,6 +18,7 @@ const HomeScreen = () => {
   };
   return (
     <View style={styles.container}>
+      <HomeScreenHeader />
       <PrayersRegionTime
         countryCode="BD"
         countryFlagUri="https://flagcdn.com/w320/bd.png"
@@ -54,7 +56,6 @@ const HomeScreen = () => {
             icon: prayerIcons.Asr,
             status: "Done",
           },
-          // etc...
         ]}
         onAddPrayer={() => {
           console.log("Add Qada Prayer clicked");
@@ -66,7 +67,7 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-const getStyles = (colors: colors) =>
+const getStyles = (colors: Colors) =>
   StyleSheet.create({
     container: {
       flex: 1,

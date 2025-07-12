@@ -61,7 +61,7 @@ const PrayersRegionTime: React.FC<Props> = ({
 
 export default PrayersRegionTime;
 
-const getStyles = (colors: colors) =>
+const getStyles = (colors: Colors) =>
   StyleSheet.create({
     container: {
       padding: 20,

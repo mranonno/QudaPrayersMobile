@@ -33,7 +33,7 @@ const HomeScreenHeader = () => {
 
 export default HomeScreenHeader;
 
-const getStyles = (colors: colors) =>
+const getStyles = (colors: Colors) =>
   StyleSheet.create({
     safeArea: {
       backgroundColor: colors.background,
@@ -41,7 +41,6 @@ const getStyles = (colors: colors) =>
     headerContent: {
       paddingVertical: 16,
       paddingHorizontal: 20,
-      marginHorizontal: 16,
       minHeight: 56,
       borderRadius: 12,
       backgroundColor: colors.card,
@@ -53,6 +52,7 @@ const getStyles = (colors: colors) =>
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 20,
+      marginTop: 8,
     },
     logo: {
       width: 60,

@@ -11,13 +11,14 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 
 type PrayerType = "Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha";
 
 interface Props {
   visible: boolean;
   onClose: () => void;
-  onAdd: (date: string, prayer: PrayerType) => void;
+  onAdd: (date: string, prayers: PrayerType[]) => void;
 }
 
 const PRAYERS: { key: PrayerType; label: string }[] = [
@@ -29,7 +30,7 @@ const PRAYERS: { key: PrayerType; label: string }[] = [
 ];
 
 const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
-  const [selectedPrayer, setSelectedPrayer] = useState<PrayerType | null>(null);
+  const [selectedPrayers, setSelectedPrayers] = useState<PrayerType[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const { colors } = useThemeContext();
@@ -40,11 +41,23 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
     setDatePickerVisible(false);
   };
 
+  const togglePrayer = (prayer: PrayerType) => {
+    setSelectedPrayers((prev) => {
+      if (prev.includes(prayer)) {
+        // remove prayer
+        return prev.filter((p) => p !== prayer);
+      } else {
+        // add prayer
+        return [...prev, prayer];
+      }
+    });
+  };
+
   const handleAdd = () => {
-    if (selectedDate && selectedPrayer) {
-      onAdd(moment(selectedDate).format("YYYY-MM-DD"), selectedPrayer);
+    if (selectedDate && selectedPrayers.length > 0) {
+      onAdd(moment(selectedDate).format("YYYY-MM-DD"), selectedPrayers);
       onClose();
-      setSelectedPrayer(null);
+      setSelectedPrayers([]);
       setSelectedDate(null);
     }
   };
@@ -72,14 +85,29 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
               key={prayer.key}
               style={[
                 styles.prayerButton,
-                selectedPrayer === prayer.key && styles.selectedPrayerButton,
+                selectedPrayers.includes(prayer.key) &&
+                  styles.selectedPrayerButton,
               ]}
-              onPress={() => setSelectedPrayer(prayer.key)}
+              onPress={() => togglePrayer(prayer.key)}
             >
+              <Feather
+                name={
+                  selectedPrayers.includes(prayer.key)
+                    ? "check-circle"
+                    : "circle"
+                }
+                size={18}
+                color={
+                  selectedPrayers.includes(prayer.key)
+                    ? colors.primary
+                    : colors.text
+                }
+              />
               <Text
                 style={[
                   styles.prayerText,
-                  selectedPrayer === prayer.key && styles.selectedPrayerText,
+                  selectedPrayers.includes(prayer.key) &&
+                    styles.selectedPrayerText,
                 ]}
               >
                 {prayer.label}
@@ -94,10 +122,11 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
             <Pressable
               style={[
                 styles.addBtn,
-                !(selectedDate && selectedPrayer) && styles.disabledBtn,
+                !(selectedDate && selectedPrayers.length > 0) &&
+                  styles.disabledBtn,
               ]}
               onPress={handleAdd}
-              disabled={!(selectedDate && selectedPrayer)}
+              disabled={!(selectedDate && selectedPrayers.length > 0)}
             >
               <Text style={styles.addText}>Add Now</Text>
             </Pressable>
@@ -115,11 +144,11 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   );
 };
 
-const getStyles = (colors: colors) =>
+const getStyles = (colors: any) =>
   StyleSheet.create({
     overlay: {
       flex: 1,
-      backgroundColor: "#00000088",
+      backgroundColor: colors.modalOverlay,
       justifyContent: "center",
       alignItems: "center",
     },
@@ -131,6 +160,7 @@ const getStyles = (colors: colors) =>
       elevation: 10,
     },
     title: {
+      color: colors.text,
       fontSize: 18,
       fontWeight: "600",
       textAlign: "center",
@@ -151,6 +181,8 @@ const getStyles = (colors: colors) =>
       fontSize: 14,
     },
     prayerButton: {
+      flexDirection: "row",
+      alignItems: "center",
       padding: 12,
       borderWidth: 1,
       borderColor: colors.border,
@@ -158,10 +190,11 @@ const getStyles = (colors: colors) =>
       marginVertical: 4,
     },
     selectedPrayerButton: {
-      backgroundColor: "#e9f8ef",
+      backgroundColor: colors.primaryOpacity,
       borderColor: colors.primary,
     },
     prayerText: {
+      marginLeft: 12,
       color: colors.text,
       fontSize: 14,
     },
@@ -196,7 +229,7 @@ const getStyles = (colors: colors) =>
       marginLeft: 8,
     },
     disabledBtn: {
-      backgroundColor: colors.primaryOpacity,
+      backgroundColor: colors.primaryDisabled,
     },
     addText: {
       color: colors.pureWhite,
