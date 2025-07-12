@@ -105,7 +105,7 @@ const getStyles = (colors: Colors) =>
     },
     separator: {
       height: 1,
-      backgroundColor: "#E0E0E0",
+      backgroundColor: colors.border,
       marginVertical: 12,
     },
     prayerRow: {

@@ -33,7 +33,7 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   const [selectedPrayers, setSelectedPrayers] = useState<PrayerType[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-  const { colors } = useThemeContext();
+  const { colors, theme } = useThemeContext();
   const styles = useMemo(() => getStyles(colors), [colors]);
 
   const handleDateConfirm = (date: Date) => {
@@ -137,7 +137,7 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
             mode="date"
             onConfirm={handleDateConfirm}
             onCancel={() => setDatePickerVisible(false)}
-            themeVariant="dark"
+            themeVariant={theme === "dark" ? "dark" : "light"}
           />
         </View>
       </View>
