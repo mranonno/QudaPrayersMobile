@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   Platform,
   StatusBar,
+  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { useNavigation } from "@react-navigation/native";
 import type { DrawerNavigationProp } from "@react-navigation/drawer";
 import type { DrawerParamList } from "../navigation/DrawerNavigator"; // adjust the path
+import IconButton from "./ui/IconButton";
 
 interface CustomHeaderProps {
   title: string;
@@ -25,10 +27,11 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   showDrawerToggle = false,
 }) => {
   const { colors } = useThemeContext();
+  const styles = getStyles(colors);
   const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.tabBackground }]}>
+    <View style={styles.container}>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -37,23 +40,20 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 
       <View style={styles.innerContainer}>
         {showBackButton && (
-          <TouchableOpacity
+          <IconButton
             onPress={() => navigation.goBack()}
-            style={[styles.iconButton, { backgroundColor: colors.card }]}
-          >
-            <Ionicons name="arrow-back" size={22} color={colors.text} />
-          </TouchableOpacity>
+            key={"backButton"}
+            icon={<Ionicons name="arrow-back" size={22} color={colors.text} />}
+          />
         )}
-
         <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
 
         {showDrawerToggle && (
-          <TouchableOpacity
+          <IconButton
             onPress={() => navigation.toggleDrawer()}
-            style={[styles.iconButton, { backgroundColor: colors.card }]}
-          >
-            <Ionicons name="menu" size={22} color={colors.text} />
-          </TouchableOpacity>
+            key={"menuButton"}
+            icon={<Ionicons name="menu" size={22} color={colors.text} />}
+          />
         )}
       </View>
     </View>
@@ -62,34 +62,29 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 
 export default CustomHeader;
 
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 48,
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  innerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  iconButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    flex: 1,
-    textAlign: "center",
-    marginHorizontal: 12,
-  },
-});
+const getStyles = (colors: Colors) =>
+  StyleSheet.create({
+    container: {
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 48,
+      backgroundColor: colors.tabBackground,
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+      elevation: 4,
+      shadowColor: colors.shadow,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+    },
+    innerContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: "600",
+      flex: 1,
+      textAlign: "center",
+      marginHorizontal: 12,
+    },
+  });

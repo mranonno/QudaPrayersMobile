@@ -36,13 +36,9 @@ const RemainingQadaPrayers = () => {
         <Text style={styles.name}>{item.name}</Text>
       </View>
       <Text style={styles.date}>{item.date}</Text>
-      {/* <View style={styles.status}>
-        <Text style={styles.doneText}>Done</Text>
-        <Ionicons name="checkmark-circle" size={18} color={colors.primary} />
-      </View> */}
       <View style={styles.pendingStatus}>
-        <Text style={styles.pendingText}>Pending</Text>
-        <Ionicons name="time-outline" size={18} color={colors.pendingText} />
+        <Text style={styles.pendingText}>{item.status}</Text>
+        <Ionicons name="time-outline" size={16} color={colors.pendingText} />
       </View>
     </View>
   );
@@ -148,7 +144,7 @@ const getStyles = (colors: Colors) =>
       fontSize: 13,
       textAlign: "center",
       color: colors.mutedText,
-      marginRight: 40,
+      marginRight: 50,
     },
     status: {
       flexDirection: "row",
@@ -167,11 +163,12 @@ const getStyles = (colors: Colors) =>
     pendingStatus: {
       flexDirection: "row",
       alignItems: "center",
+      justifyContent: "center",
       gap: 4,
       backgroundColor: colors.pendingBackground,
       paddingHorizontal: 10,
-      paddingVertical: 4,
-      borderRadius: 20,
+      paddingVertical: 6,
+      borderRadius: 50,
     },
     pendingText: {
       fontSize: 12,
