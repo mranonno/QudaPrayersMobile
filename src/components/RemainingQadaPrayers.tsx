@@ -33,11 +33,9 @@ const RemainingQadaPrayers = () => {
     <View style={styles.row}>
       <View style={styles.left}>
         <Image source={item.icon} style={styles.icon} />
-        <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
+        <Text style={styles.name}>{item.name}</Text>
       </View>
-      <Text style={[styles.date, { color: colors.mutedText }]}>
-        {item.date}
-      </Text>
+      <Text style={styles.date}>{item.date}</Text>
       {/* <View style={styles.status}>
         <Text style={styles.doneText}>Done</Text>
         <Ionicons name="checkmark-circle" size={18} color={colors.primary} />
@@ -144,11 +142,13 @@ const getStyles = (colors: Colors) =>
     name: {
       fontSize: 14,
       fontWeight: "600",
+      color: colors.text,
     },
     date: {
       fontSize: 13,
-      flex: 1,
       textAlign: "center",
+      color: colors.mutedText,
+      marginRight: 40,
     },
     status: {
       flexDirection: "row",
@@ -187,6 +187,7 @@ const getStyles = (colors: Colors) =>
       width: 320,
       height: 215,
       marginVertical: 16,
+      borderRadius: 12,
     },
     alhamdulillahText: {
       textAlign: "center",
