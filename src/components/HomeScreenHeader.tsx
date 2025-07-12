@@ -36,6 +36,7 @@ const getStyles = (colors: Colors) =>
     headerContent: {
       paddingVertical: 16,
       paddingHorizontal: 20,
+      marginHorizontal: 16,
       minHeight: 56,
       borderRadius: 12,
       backgroundColor: colors.card,

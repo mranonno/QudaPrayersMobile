@@ -9,6 +9,8 @@ export const darkColors = {
   primaryDisabled: "#3e604a",
   text: "#E0E0E0",
   mutedText: "#888888",
+  pendingBackground: "#4b3800",
+  pendingText: "#fbbf24",
   placeholder: "#777777",
   danger: "#FF5252",
   success: "#4CAF50",

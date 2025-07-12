@@ -15,4 +15,6 @@ interface Colors {
   pureWhite: string;
   pureBlack: string;
   modalOverlay: string;
+  pendingBackground: string;
+  pendingText: string;
 }

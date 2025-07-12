@@ -6,13 +6,12 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  Modal,
 } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
 import QadaPrayerAddModal from "./QadaPrayerAddModal";
+import { useGlobalContext } from "../context/GlobalContext";
 
-// Define prayer item type
 type PrayerItem = {
   id: string;
   name: string;
@@ -21,28 +20,14 @@ type PrayerItem = {
   status: "Done" | "Pending";
 };
 
-// Sample icons (replace with actual assets)
-const prayerIcons = {
-  Fajr: require("../../assets/icons/fajr.png"),
-  Dhuhr: require("../../assets/icons/dhuhr.png"),
-  Asr: require("../../assets/icons/asr.png"),
-  Maghrib: require("../../assets/icons/maghrib.png"),
-  Isha: require("../../assets/icons/isha.png"),
-};
-
-type Props = {
-  prayers: PrayerItem[];
-  onAddPrayer: () => void;
-};
-
-const RemainingQadaPrayers: React.FC<Props> = ({ prayers, onAddPrayer }) => {
+const RemainingQadaPrayers = () => {
   const { colors } = useThemeContext();
   const styles = getStyles(colors);
-
+  const { prayers, removePrayer } = useGlobalContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
-
   const openModal = () => setIsModalVisible(true);
-  const closeModal = () => setIsModalVisible(false);
+
+  console.log("🕌 Updated Prayers:", JSON.stringify(prayers, null, 2));
 
   const renderItem = ({ item }: { item: PrayerItem }) => (
     <View style={styles.row}>
@@ -53,39 +38,52 @@ const RemainingQadaPrayers: React.FC<Props> = ({ prayers, onAddPrayer }) => {
       <Text style={[styles.date, { color: colors.mutedText }]}>
         {item.date}
       </Text>
-      <View style={styles.status}>
+      {/* <View style={styles.status}>
         <Text style={styles.doneText}>Done</Text>
-        <Ionicons name="checkmark-circle" size={18} color="#22C55E" />
+        <Ionicons name="checkmark-circle" size={18} color={colors.primary} />
+      </View> */}
+      <View style={styles.pendingStatus}>
+        <Text style={styles.pendingText}>Pending</Text>
+        <Ionicons name="time-outline" size={18} color={colors.pendingText} />
       </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Remaining Qada Prayers</Text>
-
-      <View style={styles.separator} />
-
       {prayers.length === 0 ? (
-        <Text style={[styles.emptyText, { color: colors.mutedText }]}>
-          No Qada prayers available.
-        </Text>
+        <View style={styles.emptyContainer}>
+          <Text style={styles.alhamdulillahText}>Alhamdulillah</Text>
+          <Text style={styles.emptyText}>You don't have any Qada Prayers</Text>
+          <Image
+            source={require("../../assets/icons/emptyPlaceholder.png")}
+            style={styles.emptyImage}
+            resizeMode="contain"
+          />
+          <Text style={styles.suggestText}>
+            Go to the mosque and pray your next prayer to avoid Qada Prayers.
+          </Text>
+        </View>
       ) : (
-        <FlatList
-          data={prayers}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          scrollEnabled={false}
-          ItemSeparatorComponent={() => (
-            <View
-              style={{
-                height: 1,
-                backgroundColor: colors.border,
-                marginVertical: 12,
-              }}
-            />
-          )}
-        />
+        <View>
+          <Text style={styles.title}>Remaining Qada Prayers</Text>
+          <View style={styles.separator} />
+          <FlatList
+            data={prayers}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            ItemSeparatorComponent={() => (
+              <View
+                style={{
+                  height: 1,
+                  backgroundColor: colors.border,
+                  marginVertical: 12,
+                }}
+              />
+            )}
+          />
+        </View>
       )}
 
       <TouchableOpacity style={styles.addButton} onPress={openModal}>
@@ -108,8 +106,8 @@ const getStyles = (colors: Colors) =>
   StyleSheet.create({
     container: {
       marginTop: 16,
-      borderRadius: 16,
-      padding: 16,
+      borderRadius: 12,
+      padding: 20,
       backgroundColor: colors.card,
       shadowColor: colors.shadow,
       shadowOffset: { width: 0, height: 2 },
@@ -166,11 +164,46 @@ const getStyles = (colors: Colors) =>
       fontWeight: "600",
       color: colors.primary,
     },
+    pendingStatus: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+      backgroundColor: colors.pendingBackground,
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 20,
+    },
+    pendingText: {
+      fontSize: 12,
+      fontWeight: "600",
+      color: colors.pendingText,
+    },
+    emptyContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 20,
+    },
+    emptyImage: {
+      width: 320,
+      height: 215,
+      marginVertical: 16,
+    },
+    alhamdulillahText: {
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: "600",
+      color: colors.primary,
+    },
     emptyText: {
       textAlign: "center",
-      paddingVertical: 20,
+      color: colors.text,
+      fontWeight: "500",
+    },
+    suggestText: {
+      textAlign: "center",
+      marginHorizontal: 24,
       fontSize: 14,
-      fontStyle: "italic",
+      color: colors.mutedText,
     },
     addButton: {
       marginTop: 16,
@@ -180,7 +213,7 @@ const getStyles = (colors: Colors) =>
       alignItems: "center",
     },
     addButtonText: {
-      color: "#fff",
+      color: colors.pureWhite,
       fontWeight: "600",
     },
   });

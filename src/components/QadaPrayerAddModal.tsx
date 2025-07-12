@@ -12,6 +12,7 @@ import moment from "moment";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
+import { useGlobalContext } from "../context/GlobalContext";
 
 type PrayerType = "Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha";
 
@@ -29,12 +30,21 @@ const PRAYERS: { key: PrayerType; label: string }[] = [
   { key: "Isha", label: "Isha – Night Prayer" },
 ];
 
+const prayerIcons = {
+  Fajr: require("../../assets/icons/fajr.png"),
+  Dhuhr: require("../../assets/icons/dhuhr.png"),
+  Asr: require("../../assets/icons/asr.png"),
+  Maghrib: require("../../assets/icons/maghrib.png"),
+  Isha: require("../../assets/icons/isha.png"),
+};
+
 const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   const [selectedPrayers, setSelectedPrayers] = useState<PrayerType[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const { colors, theme } = useThemeContext();
   const styles = useMemo(() => getStyles(colors), [colors]);
+  const { addPrayer } = useGlobalContext();
 
   const handleDateConfirm = (date: Date) => {
     setSelectedDate(date);
@@ -44,10 +54,8 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   const togglePrayer = (prayer: PrayerType) => {
     setSelectedPrayers((prev) => {
       if (prev.includes(prayer)) {
-        // remove prayer
         return prev.filter((p) => p !== prayer);
       } else {
-        // add prayer
         return [...prev, prayer];
       }
     });
@@ -55,7 +63,18 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
 
   const handleAdd = () => {
     if (selectedDate && selectedPrayers.length > 0) {
-      onAdd(moment(selectedDate).format("YYYY-MM-DD"), selectedPrayers);
+      const dateStr = moment(selectedDate).format("DD-MMM-YYYY");
+
+      selectedPrayers.forEach((prayer) => {
+        addPrayer({
+          id: `${prayer}-${dateStr}-${Date.now()}`,
+          name: prayer,
+          date: dateStr,
+          icon: prayerIcons[prayer],
+          status: "Pending",
+        });
+      });
+      onAdd(dateStr, selectedPrayers);
       onClose();
       setSelectedPrayers([]);
       setSelectedDate(null);

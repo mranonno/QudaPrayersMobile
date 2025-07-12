@@ -9,6 +9,8 @@ export const lightColors = {
   primaryDisabled: "#a5d6a7",
   text: "#1A1A1A",
   mutedText: "#666666",
+  pendingBackground: "#fef3c7",
+  pendingText: "#f59e0b",
   placeholder: "#888888",
   danger: "#D32F2F",
   success: "#388E3C",
