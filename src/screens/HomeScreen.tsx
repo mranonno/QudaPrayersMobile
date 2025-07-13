@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import PrayersRegionTime from "../components/PrayersRegionTime";
 import RemainingQadaPrayers from "../components/RemainingQadaPrayers";
@@ -8,15 +8,17 @@ import LearnQadaPrayers from "../components/LearnQadaPrayers";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
-  const { colors } = useThemeContext();
+  const { theme } = useThemeContext();
   const { top } = useSafeAreaInsets();
-  const styles = getStyles(colors, top);
+  const styles = getStyles(top);
   return (
     <SafeAreaView style={styles.container}>
-      {/* Fixed header */}
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={theme === "dark" ? "light-content" : "dark-content"}
+      />
       <HomeScreenHeader />
-
-      {/* Scrollable content */}
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
@@ -37,11 +39,10 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-const getStyles = (colors: Colors, top: number) =>
+const getStyles = (top: number) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background,
       paddingTop: top,
     },
     scrollContainer: {

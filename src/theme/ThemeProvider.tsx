@@ -10,6 +10,7 @@ import { useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { darkColors } from "./darkColors";
 import { lightColors } from "./lightColors";
+import { fonts } from "../components/constant/fonts";
 
 type ThemeType = "light" | "dark" | "system";
 
@@ -17,6 +18,7 @@ interface ThemeContextProps {
   theme: ThemeType;
   colors: typeof lightColors;
   setTheme: (theme: ThemeType) => void;
+  fonts: typeof fonts;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
@@ -54,6 +56,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       theme,
       colors,
       setTheme,
+      fonts,
     }),
     [theme, colors]
   );
