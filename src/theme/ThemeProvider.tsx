@@ -11,57 +11,51 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { darkColors } from "./darkColors";
 import { lightColors } from "./lightColors";
 
-type ThemeType = "light" | "dark";
+type ThemeType = "light" | "dark" | "system";
 
 interface ThemeContextProps {
   theme: ThemeType;
   colors: typeof lightColors;
-  toggleTheme: () => void;
-  isSystem: boolean;
+  setTheme: (theme: ThemeType) => void;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const systemScheme = useColorScheme(); // "light" | "dark" | null
-  const [theme, setTheme] = useState<ThemeType>("light");
-  const [isSystem, setIsSystem] = useState(true); // If user overrides, set to false
+  const [theme, setThemeState] = useState<ThemeType>("system");
 
-  // Load user preference on mount
   useEffect(() => {
     const loadTheme = async () => {
       const stored = await AsyncStorage.getItem("@theme");
-      if (stored === "light" || stored === "dark") {
-        setTheme(stored);
-        setIsSystem(false);
+      if (stored === "light" || stored === "dark" || stored === "system") {
+        setThemeState(stored);
       }
     };
     loadTheme();
   }, []);
 
-  // Sync with system theme if user didn’t override
-  useEffect(() => {
-    if (isSystem && systemScheme) {
-      setTheme(systemScheme === "dark" ? "dark" : "light");
-    }
-  }, [systemScheme, isSystem]);
-
-  // Toggle between light and dark manually
-  const toggleTheme = async () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    setIsSystem(false);
+  const setTheme = async (newTheme: ThemeType) => {
+    setThemeState(newTheme);
     await AsyncStorage.setItem("@theme", newTheme);
   };
 
+  // Final resolved theme: system-based unless user sets light/dark
+  const resolvedTheme =
+    theme === "system" ? (systemScheme === "dark" ? "dark" : "light") : theme;
+
   const colors = useMemo(
-    () => (theme === "light" ? lightColors : darkColors),
-    [theme]
+    () => (resolvedTheme === "light" ? lightColors : darkColors),
+    [resolvedTheme]
   );
 
   const value = useMemo(
-    () => ({ theme, colors, toggleTheme, isSystem }),
-    [theme, colors, isSystem]
+    () => ({
+      theme,
+      colors,
+      setTheme,
+    }),
+    [theme, colors]
   );
 
   return (
