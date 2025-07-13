@@ -18,7 +18,6 @@ const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const DrawerNavigator = () => {
   const { colors } = useThemeContext();
-  const { top } = useSafeAreaInsets();
 
   return (
     <Drawer.Navigator
@@ -32,11 +31,10 @@ const DrawerNavigator = () => {
         drawerLabelStyle: { fontSize: 16 },
         drawerStyle: {
           width: 300,
-          backgroundColor: colors.tabBackground,
+          backgroundColor: colors.card,
         },
       }}
     >
-      {/* ✅ Home Stack */}
       <Drawer.Screen
         name="HomeStack"
         component={StackNavigator}
@@ -47,8 +45,6 @@ const DrawerNavigator = () => {
           ),
         }}
       />
-
-      {/* ✅ Theme Settings */}
       <Drawer.Screen
         name="ThemeSettings"
         component={ThemeSettingScreen}

@@ -1,15 +1,20 @@
 import React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import AppNavigator from "../navigation/AppNavigator";
 
 const Main = () => {
-  const { colors } = useThemeContext();
+  const { colors, theme } = useThemeContext();
 
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={theme === "dark" ? "light-content" : "dark-content"}
+      />
       <AppNavigator />
     </SafeAreaView>
   );

@@ -1,21 +1,26 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+  View,
+} from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import Animated from "react-native-reanimated";
 import { useAnimatedBackground } from "../hooks/useAnimatedBackground";
 import { Ionicons } from "@expo/vector-icons";
 
-// Define exact theme keys used in context
 type ThemeOption = {
-  key: "light" | "dark" | "system";
+  key: "system" | "light" | "dark";
   label: string;
   icon: keyof typeof Ionicons.glyphMap;
 };
 
 const themeOptions: ThemeOption[] = [
+  { key: "system", label: "System Default", icon: "desktop" },
   { key: "light", label: "Light Mode", icon: "sunny" },
   { key: "dark", label: "Dark Mode", icon: "moon" },
-  { key: "system", label: "System Default", icon: "desktop" },
 ];
 
 const ThemeSettingScreen = () => {
@@ -27,61 +32,85 @@ const ThemeSettingScreen = () => {
     setTheme(selectedTheme);
   };
 
+  console.log("Theme:", theme, "Background:", colors.background);
+
   return (
-    <Animated.View style={[animatedStyle, styles.container]}>
-      <Text style={styles.title}>Select App Theme</Text>
+    <Animated.View style={[styles.container, animatedStyle]}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={theme === "dark" ? "light-content" : "dark-content"}
+      />
 
-      {themeOptions.map((option) => {
-        const isSelected = theme === option.key;
+      <View style={styles.selectionCard}>
+        <Text style={styles.title}>Select App Theme</Text>
 
-        return (
-          <TouchableOpacity
-            key={option.key}
-            style={[
-              styles.optionContainer,
-              { borderColor: isSelected ? colors.primary : colors.border },
-            ]}
-            onPress={() => handleSelect(option.key)}
-          >
-            <Ionicons
-              name={option.icon}
-              size={24}
-              color={isSelected ? colors.primary : colors.text}
-              style={styles.icon}
-            />
-            <Text
+        {themeOptions.map((option) => {
+          const isSelected = theme === option.key;
+
+          return (
+            <TouchableOpacity
+              key={option.key}
               style={[
-                styles.label,
-                { color: isSelected ? colors.primary : colors.text },
+                styles.optionContainer,
+                {
+                  borderColor: isSelected ? colors.primary : colors.border,
+                },
               ]}
+              onPress={() => handleSelect(option.key)}
             >
-              {option.label}
-            </Text>
-            <Ionicons
-              name={
-                isSelected
-                  ? "radio-button-on-outline"
-                  : "radio-button-off-outline"
-              }
-              size={22}
-              color={isSelected ? colors.primary : colors.text}
-              style={{ marginLeft: "auto" }}
-            />
-          </TouchableOpacity>
-        );
-      })}
+              <Ionicons
+                name={option.icon}
+                size={24}
+                color={isSelected ? colors.primary : colors.text}
+                style={styles.icon}
+              />
+              <Text
+                style={[
+                  styles.label,
+                  { color: isSelected ? colors.primary : colors.text },
+                ]}
+              >
+                {option.label}
+              </Text>
+              <Ionicons
+                name={
+                  isSelected
+                    ? "radio-button-on-outline"
+                    : "radio-button-off-outline"
+                }
+                size={22}
+                color={isSelected ? colors.primary : colors.text}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </Animated.View>
   );
 };
 
 export default ThemeSettingScreen;
 
+// Dynamic style generator based on theme colors
 const getStyles = (colors: Colors) =>
   StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: 20,
       justifyContent: "center",
+    },
+    selectionCard: {
+      backgroundColor: colors.card,
+      borderRadius: 12,
+      paddingHorizontal: 20,
+      paddingVertical: 40,
+      shadowColor: colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 20,
     },
     title: {
       fontSize: 22,

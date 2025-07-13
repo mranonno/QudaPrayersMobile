@@ -1,19 +1,12 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-  StatusBar,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, Platform, StatusBar } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { useNavigation } from "@react-navigation/native";
 import type { DrawerNavigationProp } from "@react-navigation/drawer";
 import type { DrawerParamList } from "../navigation/DrawerNavigator"; // adjust the path
 import IconButton from "./ui/IconButton";
+import HamburgerIcon from "../../assets/icons/HamburgerIcon";
 
 interface CustomHeaderProps {
   title: string;
@@ -43,7 +36,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
           <IconButton
             onPress={() => navigation.goBack()}
             key={"backButton"}
-            icon={<Ionicons name="arrow-back" size={22} color={colors.text} />}
+            icon={<Ionicons name="arrow-back" size={24} color={colors.text} />}
           />
         )}
         <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
@@ -52,7 +45,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
           <IconButton
             onPress={() => navigation.toggleDrawer()}
             key={"menuButton"}
-            icon={<Ionicons name="menu" size={22} color={colors.text} />}
+            icon={<HamburgerIcon size={24} color={colors.text} />}
           />
         )}
       </View>
@@ -66,7 +59,7 @@ const getStyles = (colors: Colors) =>
   StyleSheet.create({
     container: {
       paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 48,
-      backgroundColor: colors.tabBackground,
+      backgroundColor: colors.card,
       paddingHorizontal: 16,
       paddingBottom: 16,
       elevation: 4,

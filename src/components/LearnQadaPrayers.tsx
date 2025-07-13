@@ -43,7 +43,7 @@ const LearnQadaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
           style={[styles.button, { borderColor: colors.border }]}
           onPress={() => openUrl(bookUrl)}
         >
-          <Ionicons name="book" size={20} color="green" />
+          <Ionicons name="book" size={20} color={colors.primary} />
           <Text style={[styles.buttonText, { color: colors.text }]}>
             Text Book
           </Text>
