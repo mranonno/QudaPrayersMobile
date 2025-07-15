@@ -63,7 +63,7 @@ const getStyles = (colors: Colors) =>
       paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 48,
       backgroundColor: colors.card,
       paddingHorizontal: 16,
-      paddingBottom: 16,
+      paddingBottom: 12,
       elevation: 4,
       shadowColor: colors.shadow,
       shadowOffset: { width: 0, height: 1 },

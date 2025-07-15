@@ -1,4 +1,3 @@
-// src/components/QadaConfirmModal.tsx
 import React, {
   useCallback,
   useMemo,
@@ -8,7 +7,11 @@ import React, {
 } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Props {
@@ -48,8 +51,19 @@ const QadaConfirmModal = forwardRef<QadaConfirmModalRef, Props>(
         ref={bottomSheetModalRef}
         enablePanDownToClose
         onDismiss={onClose}
-        animateOnMount
         handleIndicatorStyle={styles.handleBar}
+        handleStyle={{ backgroundColor: colors.card }}
+        style={{ zIndex: 10 }}
+        backgroundStyle={{ backgroundColor: colors.card }}
+        backdropComponent={({ animatedIndex, animatedPosition }) => (
+          <BottomSheetBackdrop
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+            animatedIndex={animatedIndex}
+            animatedPosition={animatedPosition}
+            pressBehavior="close"
+          />
+        )}
       >
         <BottomSheetView style={styles.container}>
           <Text style={styles.title}>Confirm Prayer Status</Text>
@@ -85,7 +99,6 @@ const getStyles = (colors: any, bottom: number) =>
   StyleSheet.create({
     container: {
       padding: 24,
-      backgroundColor: colors.card,
       paddingBottom: bottom,
     },
     title: {
