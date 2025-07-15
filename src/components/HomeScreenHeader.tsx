@@ -5,12 +5,13 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../navigation/DrawerNavigator";
 import HamburgerIcon from "../../assets/icons/HamburgerIcon";
 import { useThemeContext } from "../theme/ThemeProvider";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HomeScreenHeader = () => {
   const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
   const { colors } = useThemeContext();
-  const styles = getStyles(colors);
+  const { top } = useSafeAreaInsets();
+  const styles = getStyles(colors, top);
 
   return (
     <View style={styles.headerContent}>
@@ -31,9 +32,10 @@ const HomeScreenHeader = () => {
 
 export default HomeScreenHeader;
 
-const getStyles = (colors: Colors) =>
+const getStyles = (colors: Colors, top: number) =>
   StyleSheet.create({
     headerContent: {
+      marginTop: top,
       paddingVertical: 16,
       paddingHorizontal: 20,
       marginHorizontal: 16,

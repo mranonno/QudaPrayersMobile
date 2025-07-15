@@ -1,14 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useThemeContext } from "../theme/ThemeProvider";
+import HomeScreenHeader from "../components/HomeScreenHeader";
 
 const LearnVideoScreen = () => {
   const { colors } = useThemeContext();
   const styles = getStyles(colors);
   return (
-    <View style={styles.container}>
-      <Text style={{ color: colors.text }}>LearnVideoScreen</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <HomeScreenHeader />
+      <ScrollView></ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -18,8 +20,6 @@ const getStyles = (colors: Colors) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
       backgroundColor: colors.background,
     },
   });

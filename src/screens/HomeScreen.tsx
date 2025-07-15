@@ -5,12 +5,10 @@ import PrayersRegionTime from "../components/PrayersRegionTime";
 import RemainingQadaPrayers from "../components/RemainingQadaPrayers";
 import HomeScreenHeader from "../components/HomeScreenHeader";
 import LearnQadaPrayers from "../components/LearnQadaPrayers";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
   const { colors } = useThemeContext();
-  const { top } = useSafeAreaInsets();
-  const styles = getStyles(colors, top);
+  const styles = getStyles(colors);
   return (
     <SafeAreaView style={styles.container}>
       <HomeScreenHeader />
@@ -31,11 +29,10 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-const getStyles = (colors: Colors, top: number) =>
+const getStyles = (colors: Colors) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: top,
       backgroundColor: colors.background,
     },
     scrollContainer: {
