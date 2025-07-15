@@ -22,10 +22,7 @@ const HomeScreen = () => {
           countryCode="BD"
           countryFlagUri="https://flagcdn.com/w320/bd.png"
         />
-        <LearnQadaPrayers
-          videoUrl="https://www.youtube.com/watch?v=example"
-          bookUrl="https://example.com/qada-prayers-textbook"
-        />
+        <LearnQadaPrayers />
         <RemainingQadaPrayers />
       </ScrollView>
     </SafeAreaView>

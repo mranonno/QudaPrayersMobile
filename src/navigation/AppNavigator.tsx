@@ -1,9 +1,19 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import DrawerNavigator from "./DrawerNavigator";
+import { useThemeContext } from "../theme/ThemeProvider";
+
 const AppNavigator = () => {
+  const { colors } = useThemeContext();
+  const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: colors.background,
+    },
+  };
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <DrawerNavigator />
     </NavigationContainer>
   );

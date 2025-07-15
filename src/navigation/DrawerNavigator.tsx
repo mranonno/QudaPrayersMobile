@@ -6,7 +6,6 @@ import ThemeSettingScreen from "../screens/ThemeSettingScreen";
 import StackNavigator from "./StackNavigator";
 import CustomHeader from "../components/CustomHeader";
 import { useThemeContext } from "../theme/ThemeProvider";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Type safety for navigation
 export type DrawerParamList = {

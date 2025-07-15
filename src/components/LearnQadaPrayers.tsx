@@ -1,29 +1,16 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Linking,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../navigation/StackNavigator";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-type Props = {
-  videoUrl: string;
-  bookUrl: string;
-};
-
-const LearnQadaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
+const LearnQadaPrayers: React.FC = () => {
   const { colors } = useThemeContext();
   const styles = getStyles(colors);
-
-  const openUrl = (url: string) => {
-    Linking.openURL(url).catch((err) =>
-      console.error("Failed to open URL:", err)
-    );
-  };
-
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   return (
     <View style={[styles.container, { backgroundColor: colors.card }]}>
       <Text style={[styles.title, { color: colors.text }]}>
@@ -33,7 +20,7 @@ const LearnQadaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.button, { borderColor: colors.border }]}
-          onPress={() => openUrl(videoUrl)}
+          onPress={() => navigation.navigate("LearnVideo")}
         >
           <Ionicons name="logo-youtube" size={20} color="#FF0000" />
           <Text style={[styles.buttonText, { color: colors.text }]}>Video</Text>
@@ -41,7 +28,7 @@ const LearnQadaPrayers: React.FC<Props> = ({ videoUrl, bookUrl }) => {
 
         <TouchableOpacity
           style={[styles.button, { borderColor: colors.border }]}
-          onPress={() => openUrl(bookUrl)}
+          onPress={() => navigation.navigate("LearnTextBook")}
         >
           <Ionicons name="book" size={20} color={colors.primary} />
           <Text style={[styles.buttonText, { color: colors.text }]}>
