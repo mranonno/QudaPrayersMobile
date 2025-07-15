@@ -4,12 +4,13 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useMemo,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import moment from "moment";
 
-// Define the PrayerItem type
+// Types
 export type PrayerItem = {
   id: string;
   name: string;
@@ -29,11 +30,11 @@ type GlobalContextType = {
   fetchTomorrowPrayerTimes: () => Promise<Record<string, string> | null>;
 };
 
-// Create the context
+// Constants
+const STORAGE_KEY = "qada_prayers";
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
-const STORAGE_KEY = "qada_prayers";
-
+// Provider
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [prayers, setPrayers] = useState<PrayerItem[]>([]);
   const [prayersData, setPrayersData] = useState<Record<string, string> | null>(
@@ -56,7 +57,19 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     loadPrayers();
   }, []);
 
-  // Fetch today's prayer times from API
+  // Save prayers to AsyncStorage when changed
+  useEffect(() => {
+    const savePrayers = async () => {
+      try {
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(prayers));
+      } catch (error) {
+        console.error("🔴 Failed to save prayers:", error);
+      }
+    };
+    savePrayers();
+  }, [prayers]);
+
+  // Fetch today's prayer times
   useEffect(() => {
     const fetchPrayerTimes = async () => {
       try {
@@ -70,8 +83,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
             },
           }
         );
-        console.log("Day", JSON.stringify(res.data?.data, null, 2));
-
         const timings = res.data?.data?.timings;
         setPrayersData(timings || null);
       } catch (error) {
@@ -83,19 +94,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     fetchPrayerTimes();
   }, []);
 
-  // Save prayers to AsyncStorage when prayers change
-  useEffect(() => {
-    const savePrayers = async () => {
-      try {
-        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(prayers));
-      } catch (error) {
-        console.error("🔴 Failed to save prayers:", error);
-      }
-    };
-    savePrayers();
-  }, [prayers]);
-
-  // Fetch tomorrow's prayer times from API
+  // Fetch tomorrow's prayer times
   const fetchTomorrowPrayerTimes = async () => {
     try {
       const res = await axios.get(
@@ -109,7 +108,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
           },
         }
       );
-      console.log("Next Day", JSON.stringify(res.data?.data, null, 2));
       return res.data?.data?.timings || null;
     } catch (error) {
       console.error("❌ Failed to fetch tomorrow's prayer times:", error);
@@ -117,6 +115,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Handlers
   const addPrayer = (prayer: PrayerItem) => {
     setPrayers((prev) => [...prev, prayer]);
   };
@@ -129,24 +128,29 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setPrayers((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
   };
 
+  // Memoized value
+  const contextValue = useMemo(
+    () => ({
+      prayers,
+      setPrayers,
+      addPrayer,
+      removePrayer,
+      updatePrayerStatus,
+      loading,
+      prayersData,
+      fetchTomorrowPrayerTimes,
+    }),
+    [prayers, loading, prayersData]
+  );
+
   return (
-    <GlobalContext.Provider
-      value={{
-        prayers,
-        setPrayers,
-        addPrayer,
-        removePrayer,
-        updatePrayerStatus,
-        loading,
-        prayersData,
-        fetchTomorrowPrayerTimes,
-      }}
-    >
+    <GlobalContext.Provider value={contextValue}>
       {children}
     </GlobalContext.Provider>
   );
 };
 
+// Hook
 export const useGlobalContext = (): GlobalContextType => {
   const context = useContext(GlobalContext);
   if (!context) {

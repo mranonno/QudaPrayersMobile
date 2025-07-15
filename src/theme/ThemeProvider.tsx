@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useMemo,
+  useCallback,
   ReactNode,
 } from "react";
 import { useColorScheme } from "react-native";
@@ -24,25 +25,32 @@ interface ThemeContextProps {
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const systemScheme = useColorScheme(); // "light" | "dark" | null
+  const systemScheme = useColorScheme();
   const [theme, setThemeState] = useState<ThemeType>("system");
 
   useEffect(() => {
     const loadTheme = async () => {
-      const stored = await AsyncStorage.getItem("@theme");
-      if (stored === "light" || stored === "dark" || stored === "system") {
-        setThemeState(stored);
+      try {
+        const stored = await AsyncStorage.getItem("@theme");
+        if (stored === "light" || stored === "dark" || stored === "system") {
+          setThemeState(stored);
+        }
+      } catch (error) {
+        console.warn("Failed to load theme from storage:", error);
       }
     };
     loadTheme();
   }, []);
 
-  const setTheme = async (newTheme: ThemeType) => {
-    setThemeState(newTheme);
-    await AsyncStorage.setItem("@theme", newTheme);
-  };
+  const setTheme = useCallback(async (newTheme: ThemeType) => {
+    try {
+      setThemeState(newTheme);
+      await AsyncStorage.setItem("@theme", newTheme);
+    } catch (error) {
+      console.warn("Failed to save theme to storage:", error);
+    }
+  }, []);
 
-  // Final resolved theme: system-based unless user sets light/dark
   const resolvedTheme =
     theme === "system" ? (systemScheme === "dark" ? "dark" : "light") : theme;
 
@@ -58,7 +66,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       setTheme,
       fonts,
     }),
-    [theme, colors]
+    [theme, colors, setTheme]
   );
 
   return (

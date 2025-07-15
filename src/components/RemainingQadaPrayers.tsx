@@ -1,18 +1,12 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
 import QadaPrayerAddModal from "./QadaPrayerAddModal";
-import QadaConfirmModal from "./QadaConfirmModal"; // <-- import your new modal
+import QadaConfirmModal from "./QadaConfirmModal";
 import { useGlobalContext } from "../context/GlobalContext";
 import moment from "moment";
+import Animated, { LinearTransition } from "react-native-reanimated";
 
 type PrayerItem = {
   id: string;
@@ -27,7 +21,6 @@ const RemainingQadaPrayers = () => {
   const styles = getStyles(colors);
   const { prayers, setPrayers } = useGlobalContext();
 
-  // Filter only Pending prayers for display
   const pendingPrayers = prayers
     .filter((p) => p.status === "Pending")
     .sort(
@@ -101,11 +94,12 @@ const RemainingQadaPrayers = () => {
         <View>
           <Text style={styles.title}>Remaining Qada Prayers</Text>
           <View style={styles.separator} />
-          <FlatList
+          <Animated.FlatList
             data={pendingPrayers}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
             scrollEnabled={false}
+            itemLayoutAnimation={LinearTransition}
             ItemSeparatorComponent={() => (
               <View
                 style={{
