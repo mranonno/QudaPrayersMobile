@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import LearnVideoScreen from "../screens/LearnVideoScreen";
 import LearnTextBookScreen from "../screens/LearnTextBookScreen";
+import CustomHeader from "../components/CustomHeader";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -26,16 +27,16 @@ const StackNavigator = () => {
       />
       <Stack.Screen
         options={{
-          headerShown: false,
           animation: "slide_from_right",
+          header: () => <CustomHeader title="Video" showBackButton />,
         }}
         name="LearnVideo"
         component={LearnVideoScreen}
       />
       <Stack.Screen
         options={{
-          headerShown: false,
           animation: "slide_from_right",
+          header: () => <CustomHeader title="Text Book" showBackButton />,
         }}
         name="LearnTextBook"
         component={LearnTextBookScreen}

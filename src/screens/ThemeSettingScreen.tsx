@@ -32,8 +32,6 @@ const ThemeSettingScreen = () => {
     setTheme(selectedTheme);
   };
 
-  console.log("Theme:", theme, "Background:", colors.background);
-
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
       <StatusBar

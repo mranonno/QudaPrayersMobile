@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+// src/components/RemainingQadaPrayers.tsx
+import React, { useRef, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
 import QadaPrayerAddModal from "./QadaPrayerAddModal";
-import QadaConfirmModal from "./QadaConfirmModal";
+import QadaConfirmModal, { QadaConfirmModalRef } from "./QadaConfirmModal";
 import { useGlobalContext } from "../context/GlobalContext";
 import moment from "moment";
 import Animated, { LinearTransition } from "react-native-reanimated";
@@ -30,22 +31,18 @@ const RemainingQadaPrayers = () => {
     );
 
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [selectedPrayer, setSelectedPrayer] = useState<PrayerItem | null>(null);
+
+  const confirmModalRef = useRef<QadaConfirmModalRef>(null);
 
   const openAddModal = () => setIsAddModalVisible(true);
   const closeAddModal = () => setIsAddModalVisible(false);
 
   const openConfirmModal = (prayer: PrayerItem) => {
     setSelectedPrayer(prayer);
-    setConfirmModalVisible(true);
-  };
-  const closeConfirmModal = () => {
-    setSelectedPrayer(null);
-    setConfirmModalVisible(false);
+    confirmModalRef.current?.present();
   };
 
-  // When user confirms marking prayer as done
   const handleConfirmDone = () => {
     if (!selectedPrayer) return;
 
@@ -55,7 +52,7 @@ const RemainingQadaPrayers = () => {
       )
     );
 
-    closeConfirmModal();
+    setSelectedPrayer(null);
   };
 
   const renderItem = ({ item }: { item: PrayerItem }) => (
@@ -126,8 +123,8 @@ const RemainingQadaPrayers = () => {
       />
 
       <QadaConfirmModal
-        visible={confirmModalVisible}
-        onClose={closeConfirmModal}
+        ref={confirmModalRef}
+        onClose={() => setSelectedPrayer(null)}
         onConfirm={handleConfirmDone}
         prayerName={selectedPrayer?.name || ""}
       />

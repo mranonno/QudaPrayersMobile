@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useThemeContext } from "../theme/ThemeProvider";
 import { useNavigation } from "@react-navigation/native";
 import type { DrawerNavigationProp } from "@react-navigation/drawer";
-import type { DrawerParamList } from "../navigation/DrawerNavigator"; // adjust the path
+import type { DrawerParamList } from "../navigation/DrawerNavigator";
 import IconButton from "./ui/IconButton";
 import HamburgerIcon from "../../assets/icons/HamburgerIcon";
 
@@ -35,18 +35,20 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
         {showBackButton && (
           <IconButton
             onPress={() => navigation.goBack()}
-            key={"backButton"}
+            key="backButton"
             icon={<Ionicons name="arrow-back" size={24} color={colors.text} />}
           />
         )}
         <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
 
-        {showDrawerToggle && (
+        {showDrawerToggle ? (
           <IconButton
             onPress={() => navigation.toggleDrawer()}
-            key={"menuButton"}
+            key="menuButton"
             icon={<HamburgerIcon size={24} color={colors.text} />}
           />
+        ) : (
+          <View style={styles.emptyMenu} />
         )}
       </View>
     </View>
@@ -73,11 +75,14 @@ const getStyles = (colors: Colors) =>
       alignItems: "center",
       justifyContent: "space-between",
     },
+
     title: {
       fontSize: 18,
       fontWeight: "600",
-      flex: 1,
       textAlign: "center",
-      marginHorizontal: 12,
+      flex: 1,
+    },
+    emptyMenu: {
+      width: 36,
     },
   });

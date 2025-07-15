@@ -52,7 +52,7 @@ export default function App() {
                 <Suspense
                   fallback={
                     <View style={styles.loaderContainer}>
-                      <ActivityIndicator size="large" color="#007AFF" />
+                      <ActivityIndicator size="large" color="#00aa39" />
                     </View>
                   }
                 >

@@ -1,14 +1,17 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from "react-native";
 import React from "react";
 import { useThemeContext } from "../theme/ThemeProvider";
-import HomeScreenHeader from "../components/HomeScreenHeader";
 
 const LearnVideoScreen = () => {
-  const { colors } = useThemeContext();
+  const { colors, theme } = useThemeContext();
   const styles = getStyles(colors);
   return (
     <SafeAreaView style={styles.container}>
-      <HomeScreenHeader />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={theme === "dark" ? "light-content" : "dark-content"}
+      />
       <ScrollView></ScrollView>
     </SafeAreaView>
   );

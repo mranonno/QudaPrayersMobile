@@ -1,34 +1,57 @@
-import React, { useMemo } from "react";
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  StyleSheet,
-} from "react-native";
+// src/components/QadaConfirmModal.tsx
+import React, {
+  useCallback,
+  useMemo,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Props {
-  visible: boolean;
   onClose: () => void;
   onConfirm: () => void;
   prayerName: string;
 }
 
-const QadaConfirmModal: React.FC<Props> = ({
-  visible,
-  onClose,
-  onConfirm,
-  prayerName,
-}) => {
-  const { colors } = useThemeContext();
-  const styles = useMemo(() => getStyles(colors), [colors]);
+export type QadaConfirmModalRef = {
+  present: () => void;
+  dismiss: () => void;
+};
 
-  return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.container}>
+const QadaConfirmModal = forwardRef<QadaConfirmModalRef, Props>(
+  ({ onClose, onConfirm, prayerName }, ref) => {
+    const { colors } = useThemeContext();
+    const { bottom } = useSafeAreaInsets();
+    const styles = useMemo(() => getStyles(colors, bottom), [colors, bottom]);
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+    const handlePresent = useCallback(() => {
+      bottomSheetModalRef.current?.present();
+    }, []);
+
+    const handleDismiss = useCallback(() => {
+      bottomSheetModalRef.current?.dismiss();
+      onClose();
+    }, [onClose]);
+
+    useImperativeHandle(ref, () => ({
+      present: handlePresent,
+      dismiss: () => bottomSheetModalRef.current?.dismiss(),
+    }));
+
+    return (
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        enablePanDownToClose
+        onDismiss={onClose}
+        animateOnMount
+        handleIndicatorStyle={styles.handleBar}
+      >
+        <BottomSheetView style={styles.container}>
           <Text style={styles.title}>Confirm Prayer Status</Text>
           <Text style={styles.message}>
             Mark the prayer <Text style={styles.prayerName}>{prayerName}</Text>{" "}
@@ -36,33 +59,34 @@ const QadaConfirmModal: React.FC<Props> = ({
           </Text>
 
           <View style={styles.buttonRow}>
-            <Pressable style={styles.cancelBtn} onPress={onClose}>
+            <Pressable style={styles.cancelBtn} onPress={handleDismiss}>
               <Text style={styles.cancelText}>Cancel</Text>
             </Pressable>
-            <Pressable style={styles.confirmBtn} onPress={onConfirm}>
+
+            <Pressable
+              style={styles.confirmBtn}
+              onPress={() => {
+                onConfirm();
+                bottomSheetModalRef.current?.dismiss();
+              }}
+            >
               <Text style={styles.confirmText}>Confirm</Text>
             </Pressable>
           </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
+        </BottomSheetView>
+      </BottomSheetModal>
+    );
+  }
+);
 
-const getStyles = (colors: any) =>
+export default QadaConfirmModal;
+
+const getStyles = (colors: any, bottom: number) =>
   StyleSheet.create({
-    overlay: {
-      flex: 1,
-      backgroundColor: colors.modalOverlay,
-      justifyContent: "center",
-      alignItems: "center",
-    },
     container: {
-      width: "85%",
+      padding: 24,
       backgroundColor: colors.card,
-      borderRadius: 16,
-      padding: 20,
-      elevation: 10,
+      paddingBottom: bottom,
     },
     title: {
       color: colors.text,
@@ -85,6 +109,7 @@ const getStyles = (colors: any) =>
     buttonRow: {
       flexDirection: "row",
       justifyContent: "space-between",
+      marginBottom: 20,
     },
     cancelBtn: {
       flex: 1,
@@ -111,6 +136,5 @@ const getStyles = (colors: any) =>
       color: colors.pureWhite,
       fontWeight: "600",
     },
+    handleBar: { backgroundColor: colors.primary, width: 50 },
   });
-
-export default QadaConfirmModal;

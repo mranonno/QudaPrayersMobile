@@ -1,14 +1,23 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+} from "react-native";
 import React from "react";
 import Accordion from "../components/ui/Accordion";
 import { useThemeContext } from "../theme/ThemeProvider";
-import HomeScreenHeader from "../components/HomeScreenHeader";
 
 const LearnTextBookScreen = () => {
-  const { colors } = useThemeContext();
+  const { colors, theme } = useThemeContext();
   return (
     <SafeAreaView>
-      <HomeScreenHeader />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={theme === "dark" ? "light-content" : "dark-content"}
+      />
       <ScrollView style={styles.accordionContainer}>
         <Accordion title="What is Qada Prayer?">
           <Text style={{ color: colors.text }}>
