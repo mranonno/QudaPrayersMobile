@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import QadaPrayerAddModal from "./QadaPrayerAddModal";
 import QadaConfirmModal from "./QadaConfirmModal"; // <-- import your new modal
 import { useGlobalContext } from "../context/GlobalContext";
+import moment from "moment";
 
 type PrayerItem = {
   id: string;
@@ -27,7 +28,13 @@ const RemainingQadaPrayers = () => {
   const { prayers, setPrayers } = useGlobalContext();
 
   // Filter only Pending prayers for display
-  const pendingPrayers = prayers.filter((p) => p.status === "Pending");
+  const pendingPrayers = prayers
+    .filter((p) => p.status === "Pending")
+    .sort(
+      (a, b) =>
+        moment(a.date, "DD-MMM-YYYY").toDate().getTime() -
+        moment(b.date, "DD-MMM-YYYY").toDate().getTime()
+    );
 
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
