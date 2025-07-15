@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import moment from "moment";
 
 // Define the PrayerItem type
 export type PrayerItem = {
@@ -25,6 +26,7 @@ type GlobalContextType = {
   updatePrayerStatus: (id: string, status: "Done" | "Pending") => void;
   loading: boolean;
   prayersData: Record<string, string> | null;
+  fetchTomorrowPrayerTimes: () => Promise<Record<string, string> | null>;
 };
 
 // Create the context
@@ -32,7 +34,6 @@ const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
 const STORAGE_KEY = "qada_prayers";
 
-// Provider component
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [prayers, setPrayers] = useState<PrayerItem[]>([]);
   const [prayersData, setPrayersData] = useState<Record<string, string> | null>(
@@ -40,7 +41,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   );
   const [loading, setLoading] = useState(true);
 
-  // Load from AsyncStorage
+  // Load prayers from AsyncStorage
   useEffect(() => {
     const loadPrayers = async () => {
       try {
@@ -55,7 +56,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     loadPrayers();
   }, []);
 
-  // Fetch prayer times from Aladhan API
+  // Fetch today's prayer times from API
   useEffect(() => {
     const fetchPrayerTimes = async () => {
       try {
@@ -69,6 +70,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
             },
           }
         );
+        console.log("Day", JSON.stringify(res.data?.data, null, 2));
+
         const timings = res.data?.data?.timings;
         setPrayersData(timings || null);
       } catch (error) {
@@ -77,11 +80,10 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
       }
     };
-
     fetchPrayerTimes();
   }, []);
 
-  // Save to AsyncStorage
+  // Save prayers to AsyncStorage when prayers change
   useEffect(() => {
     const savePrayers = async () => {
       try {
@@ -92,6 +94,28 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     };
     savePrayers();
   }, [prayers]);
+
+  // Fetch tomorrow's prayer times from API
+  const fetchTomorrowPrayerTimes = async () => {
+    try {
+      const res = await axios.get(
+        "https://api.aladhan.com/v1/timingsByAddress",
+        {
+          params: {
+            address: "Dhaka,Bangladesh",
+            method: 8,
+            tune: "2,3,4,5,2,3,4,5,-3",
+            date: moment().add(1, "day").format("DD-MM-YYYY"),
+          },
+        }
+      );
+      console.log("Next Day", JSON.stringify(res.data?.data, null, 2));
+      return res.data?.data?.timings || null;
+    } catch (error) {
+      console.error("❌ Failed to fetch tomorrow's prayer times:", error);
+      return null;
+    }
+  };
 
   const addPrayer = (prayer: PrayerItem) => {
     setPrayers((prev) => [...prev, prayer]);
@@ -115,6 +139,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         updatePrayerStatus,
         loading,
         prayersData,
+        fetchTomorrowPrayerTimes,
       }}
     >
       {children}
@@ -122,7 +147,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Custom hook
 export const useGlobalContext = (): GlobalContextType => {
   const context = useContext(GlobalContext);
   if (!context) {

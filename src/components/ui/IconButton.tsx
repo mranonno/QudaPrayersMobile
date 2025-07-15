@@ -1,11 +1,10 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Pressable } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { Pressable } from "react-native";
 import { useThemeContext } from "../../theme/ThemeProvider";
 
 type Props = {
@@ -20,16 +19,25 @@ const IconButton: React.FC<Props> = ({ icon, onPress, style }) => {
   const { colors } = useThemeContext();
   const bg = useSharedValue(0);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    backgroundColor: bg.value
-      ? withTiming(colors.card, { duration: 100 })
-      : withTiming("transparent", { duration: 100 }),
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    const backgroundColor = bg.value === 1 ? colors.background : "transparent";
+    return {
+      backgroundColor,
+    };
+  });
+
+  const handlePressIn = () => {
+    bg.value = withTiming(1, { duration: 100 });
+  };
+
+  const handlePressOut = () => {
+    bg.value = withTiming(0, { duration: 100 });
+  };
 
   return (
     <AnimatedPressable
-      onPressIn={() => (bg.value = 1)}
-      onPressOut={() => (bg.value = 0)}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       onPress={onPress}
       style={[styles.iconButton, animatedStyle, style]}
     >

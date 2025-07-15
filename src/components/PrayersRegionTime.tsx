@@ -16,14 +16,15 @@ const PrayersRegionTime: React.FC<Props> = ({
 }) => {
   const { colors } = useThemeContext();
   const styles = getStyles(colors);
-  const { prayersData } = useGlobalContext();
+  const { prayersData, fetchTomorrowPrayerTimes } = useGlobalContext();
   const [nextPrayer, setNextPrayer] = useState<NextPrayer | null>(null);
 
   useEffect(() => {
     if (!prayersData) return;
 
-    const updateNextPrayer = () => {
-      const np = getNextPrayer(prayersData);
+    const updateNextPrayer = async () => {
+      const np = await getNextPrayer(prayersData, fetchTomorrowPrayerTimes);
+      console.log("Next prayer (possibly tomorrow):", np);
       setNextPrayer(np);
     };
 
@@ -33,9 +34,7 @@ const PrayersRegionTime: React.FC<Props> = ({
     return () => clearInterval(interval);
   }, [prayersData]);
 
-  // if (!nextPrayer) return null;
-
-  console.log("prayers data", nextPrayer);
+  if (!nextPrayer) return null;
 
   return (
     <View style={styles.container}>
@@ -52,20 +51,19 @@ const PrayersRegionTime: React.FC<Props> = ({
 
       <View style={styles.separator} />
 
-      {/* Prayer Info */}
       <View style={styles.prayerRow}>
         <View style={styles.left}>
-          <Image source={nextPrayer?.icon} style={styles.icon} />
+          <Image source={nextPrayer.icon} style={styles.icon} />
           <Text style={[styles.prayerName, { color: colors.text }]}>
-            {nextPrayer?.name}
+            {nextPrayer.name}
           </Text>
         </View>
         <View style={styles.right}>
           <Text style={[styles.prayerTime, { color: colors.text }]}>
-            {nextPrayer?.time}
+            {nextPrayer.time}
           </Text>
           <Text style={[styles.remainingTime, { color: colors.mutedText }]}>
-            {nextPrayer?.timeRemaining}
+            {nextPrayer.timeRemaining}
           </Text>
         </View>
       </View>
