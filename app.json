@@ -27,10 +27,19 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/0d1d5af4-cb03-4351-80fc-48cdbf378f6d"
+    },
     "extra": {
       "eas": {
         "projectId": "0d1d5af4-cb03-4351-80fc-48cdbf378f6d"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }

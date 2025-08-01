@@ -6,6 +6,7 @@ import { GlobalProvider } from "./src/context/GlobalContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import Toast from "react-native-toast-message";
 
 // Lazy load Main component to improve startup time
 const Main = lazy(() => import("./src/_layout/Main"));
@@ -56,6 +57,7 @@ export default function App() {
                     </View>
                   }
                 >
+                  <Toast />
                   <Main />
                 </Suspense>
               </ErrorBoundary>
