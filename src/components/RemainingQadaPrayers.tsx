@@ -113,7 +113,7 @@ const RemainingQadaPrayers = () => {
         </View>
       )}
 
-      <TouchableOpacity onPress={openAddModal}>
+      <TouchableOpacity activeOpacity={0.8} onPress={openAddModal}>
         <LinearGradient
           colors={["#00C864", "#2D9299"]}
           start={{ x: 0, y: 0 }}

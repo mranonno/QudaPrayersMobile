@@ -13,6 +13,7 @@ import { useThemeContext } from "../theme/ThemeProvider";
 import { Ionicons } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
 import { useGlobalContext } from "../context/GlobalContext";
+import { LinearGradient } from "expo-linear-gradient";
 
 type PrayerType = "Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha";
 
@@ -45,6 +46,8 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   const { colors, theme } = useThemeContext();
   const styles = useMemo(() => getStyles(colors), [colors]);
   const { addPrayer } = useGlobalContext();
+
+  const isDisabled = !(selectedDate && selectedPrayers.length > 0);
 
   const handleDateConfirm = (date: Date) => {
     setSelectedDate(date);
@@ -81,6 +84,12 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
     }
   };
 
+  const handleCancel = () => {
+    setSelectedDate(null);
+    setSelectedPrayers([]);
+    onClose();
+  };
+
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
@@ -101,6 +110,7 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
 
           {PRAYERS.map((prayer) => (
             <TouchableOpacity
+              activeOpacity={0.5}
               key={prayer.key}
               style={[
                 styles.prayerButton,
@@ -135,20 +145,35 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
           ))}
 
           <View style={styles.buttonRow}>
-            <Pressable style={styles.cancelBtn} onPress={onClose}>
-              <Text style={styles.cancelText}>Cancel</Text>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.addBtn,
-                !(selectedDate && selectedPrayers.length > 0) &&
-                  styles.disabledBtn,
-              ]}
-              onPress={handleAdd}
-              disabled={!(selectedDate && selectedPrayers.length > 0)}
+            <LinearGradient
+              colors={["#00C864", "#2D9299"]}
+              style={styles.cancelButtonContainer}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
             >
-              <Text style={styles.addText}>Add Now</Text>
-            </Pressable>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={handleCancel}
+                style={styles.cancelBtn}
+              >
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={{ flex: 0.55 }}
+              onPress={handleAdd}
+              disabled={isDisabled}
+            >
+              <LinearGradient
+                colors={["#00C864", "#2D9299"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={[styles.addBtn, isDisabled && { opacity: 0.6 }]}
+              >
+                <Text style={styles.addText}>Add Now</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
 
           <DateTimePickerModal
@@ -164,7 +189,7 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   );
 };
 
-const getStyles = (colors: Colors) =>
+const getStyles = (colors: any) =>
   StyleSheet.create({
     overlay: {
       flex: 1,
@@ -224,32 +249,34 @@ const getStyles = (colors: Colors) =>
     },
     buttonRow: {
       flexDirection: "row",
-      marginTop: 24,
+      gap: 5,
+      alignItems: "center",
       justifyContent: "space-between",
+      marginTop: 24,
+    },
+    cancelButtonContainer: {
+      flex: 0.42,
+      padding: 1,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
     },
     cancelBtn: {
       flex: 1,
-      padding: 12,
-      borderRadius: 10,
-      borderColor: colors.primary,
-      borderWidth: 1,
-      marginRight: 8,
       alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: colors.card,
+      width: "100%",
+      borderRadius: 9,
     },
     cancelText: {
-      color: colors.primary,
+      color: "#20A18A",
       fontWeight: "500",
     },
     addBtn: {
-      flex: 1,
-      padding: 12,
-      backgroundColor: colors.primary,
+      padding: 14,
       borderRadius: 10,
       alignItems: "center",
-      marginLeft: 8,
-    },
-    disabledBtn: {
-      backgroundColor: colors.primaryDisabled,
     },
     addText: {
       color: colors.pureWhite,
