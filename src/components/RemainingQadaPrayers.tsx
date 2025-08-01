@@ -8,6 +8,7 @@ import QadaConfirmModal, { QadaConfirmModalRef } from "./QadaConfirmModal";
 import { useGlobalContext } from "../context/GlobalContext";
 import moment from "moment";
 import Animated, { LinearTransition } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
 
 type PrayerItem = {
   id: string;
@@ -112,8 +113,15 @@ const RemainingQadaPrayers = () => {
         </View>
       )}
 
-      <TouchableOpacity style={styles.addButton} onPress={openAddModal}>
-        <Text style={styles.addButtonText}>Add Qada Prayer</Text>
+      <TouchableOpacity onPress={openAddModal}>
+        <LinearGradient
+          colors={["#00C864", "#2D9299"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.addButton}
+        >
+          <Text style={styles.addButtonText}>Add Qada Prayer</Text>
+        </LinearGradient>
       </TouchableOpacity>
 
       <QadaPrayerAddModal
@@ -231,10 +239,11 @@ const getStyles = (colors: Colors) =>
     },
     addButton: {
       marginTop: 16,
-      backgroundColor: colors.primary,
-      paddingVertical: 12,
+      paddingVertical: 14,
       borderRadius: 10,
       alignItems: "center",
+      paddingHorizontal: 24,
+      justifyContent: "center",
     },
     addButtonText: {
       color: colors.pureWhite,
