@@ -6,6 +6,7 @@ import React, {
   ReactNode,
   useMemo,
 } from "react";
+import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import moment from "moment";
@@ -27,6 +28,8 @@ type GlobalContextType = {
   updatePrayerStatus: (id: string, status: "Done" | "Pending") => void;
   loading: boolean;
   prayersData: Record<string, string> | null;
+  todayPrayersData: Record<string, string> | null;
+  fetchTodayPrayerTimes: () => Promise<void>;
   fetchTomorrowPrayerTimes: () => Promise<Record<string, string> | null>;
 };
 
@@ -40,6 +43,10 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [prayersData, setPrayersData] = useState<Record<string, string> | null>(
     null
   );
+  const [todayPrayersData, setTodayPrayersData] = useState<Record<
+    string,
+    string
+  > | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Load prayers from AsyncStorage
@@ -70,29 +77,45 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   }, [prayers]);
 
   // Fetch today's prayer times
+  const fetchTodayPrayerTimes = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        "https://api.aladhan.com/v1/timingsByAddress",
+        {
+          params: {
+            address: "Dhaka,Bangladesh",
+            method: 8,
+            tune: "2,3,4,5,2,3,4,5,-3",
+          },
+        }
+      );
+      const timings = res.data?.data?.timings;
+      setPrayersData(timings || null);
+      setTodayPrayersData(timings || null);
+    } catch (error) {
+      console.error("❌ Failed to fetch today's prayer times:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Automatically fetch on mount & when app resumes
   useEffect(() => {
-    const fetchPrayerTimes = async () => {
-      try {
-        const res = await axios.get(
-          "https://api.aladhan.com/v1/timingsByAddress",
-          {
-            params: {
-              address: "Dhaka,Bangladesh",
-              method: 8,
-              tune: "2,3,4,5,2,3,4,5,-3",
-            },
-          }
-        );
-        console.log("Fetched prayer times:", res.data.data);
-        const timings = res.data?.data?.timings;
-        setPrayersData(timings || null);
-      } catch (error) {
-        console.error("❌ Failed to fetch prayer times:", error);
-      } finally {
-        setLoading(false);
+    fetchTodayPrayerTimes(); // Initial fetch
+
+    const handleAppStateChange = (state: string) => {
+      if (state === "active") {
+        fetchTodayPrayerTimes();
       }
     };
-    fetchPrayerTimes();
+
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
+
+    return () => subscription.remove();
   }, []);
 
   // Fetch tomorrow's prayer times
@@ -129,7 +152,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setPrayers((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
   };
 
-  // Memoized value
+  // Memoized context value
   const contextValue = useMemo(
     () => ({
       prayers,
@@ -139,9 +162,11 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       updatePrayerStatus,
       loading,
       prayersData,
+      todayPrayersData,
+      fetchTodayPrayerTimes,
       fetchTomorrowPrayerTimes,
     }),
-    [prayers, loading, prayersData]
+    [prayers, loading, prayersData, todayPrayersData]
   );
 
   return (
