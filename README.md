@@ -61,5 +61,5 @@ eas update --branch main --message "My OTA update message"
 2. For Preview build
 
 ```bash
-eas build --profile development --platform android
+eas build --profile preview --platform android
 ```
