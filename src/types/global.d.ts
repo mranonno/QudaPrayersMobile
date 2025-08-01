@@ -17,4 +17,6 @@ interface Colors {
   modalOverlay: string;
   pendingBackground: string;
   pendingText: string;
+  markAsDone: string;
+  markAsDoneBackground: string;
 }

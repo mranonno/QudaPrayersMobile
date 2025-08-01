@@ -157,7 +157,7 @@ const getStyles = (colors: any) =>
     title: {
       fontSize: 16,
       fontWeight: "600",
-      marginBottom: 12,
+      marginBottom: 20,
       color: colors.text,
     },
     row: {

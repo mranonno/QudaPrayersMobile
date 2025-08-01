@@ -66,8 +66,10 @@ const RemainingQadaPrayers = () => {
         style={styles.pendingStatus}
         onPress={() => openConfirmModal(item)}
       >
-        <Text style={styles.pendingText}>{item.status}</Text>
-        <Ionicons name="time-outline" size={16} color={colors.pendingText} />
+        <Text style={styles.pendingText}>
+          {item.status === "Pending" ? "Mark as Done" : "Done"}
+        </Text>
+        {/* <Ionicons name="time-outline" size={16} color={colors.pendingText} /> */}
       </TouchableOpacity>
     </View>
   );
@@ -189,15 +191,15 @@ const getStyles = (colors: Colors) =>
       alignItems: "center",
       justifyContent: "center",
       gap: 4,
-      backgroundColor: colors.pendingBackground,
+      backgroundColor: colors.markAsDoneBackground,
       paddingHorizontal: 10,
       paddingVertical: 6,
-      borderRadius: 50,
+      borderRadius: 8,
     },
     pendingText: {
       fontSize: 12,
       fontWeight: "600",
-      color: colors.pendingText,
+      color: colors.markAsDone,
     },
     emptyContainer: {
       alignItems: "center",

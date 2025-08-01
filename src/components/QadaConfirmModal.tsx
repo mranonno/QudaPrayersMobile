@@ -52,9 +52,11 @@ const QadaConfirmModal = forwardRef<QadaConfirmModalRef, Props>(
         enablePanDownToClose
         onDismiss={onClose}
         handleIndicatorStyle={styles.handleBar}
-        handleStyle={{ backgroundColor: colors.card }}
+        // handleStyle={{
+        //   backgroundColor: colors.card,
+        // }}
         style={{ zIndex: 10 }}
-        backgroundStyle={{ backgroundColor: colors.card }}
+        backgroundStyle={{ backgroundColor: colors.card, borderRadius: 24 }}
         backdropComponent={({ animatedIndex, animatedPosition }) => (
           <BottomSheetBackdrop
             disappearsOnIndex={-1}
