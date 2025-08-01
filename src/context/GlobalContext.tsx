@@ -83,6 +83,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
             },
           }
         );
+        console.log("Fetched prayer times:", res.data.data);
         const timings = res.data?.data?.timings;
         setPrayersData(timings || null);
       } catch (error) {

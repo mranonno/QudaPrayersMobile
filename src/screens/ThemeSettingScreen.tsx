@@ -18,7 +18,7 @@ type ThemeOption = {
 };
 
 const themeOptions: ThemeOption[] = [
-  { key: "system", label: "System Default", icon: "desktop" },
+  { key: "system", label: "System Default", icon: "phone-portrait-outline" },
   { key: "light", label: "Light Mode", icon: "sunny" },
   { key: "dark", label: "Dark Mode", icon: "moon" },
 ];

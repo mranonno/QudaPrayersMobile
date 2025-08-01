@@ -5,6 +5,7 @@ import PrayersRegionTime from "../components/PrayersRegionTime";
 import RemainingQadaPrayers from "../components/RemainingQadaPrayers";
 import HomeScreenHeader from "../components/HomeScreenHeader";
 import LearnQadaPrayers from "../components/LearnQadaPrayers";
+import PrayerTimesCard from "../components/PrayerTimesCard";
 
 const HomeScreen = () => {
   const { colors } = useThemeContext();
@@ -20,6 +21,7 @@ const HomeScreen = () => {
           countryCode="BD"
           countryFlagUri="https://flagcdn.com/w320/bd.png"
         />
+        <PrayerTimesCard />
         <LearnQadaPrayers />
         <RemainingQadaPrayers />
       </ScrollView>

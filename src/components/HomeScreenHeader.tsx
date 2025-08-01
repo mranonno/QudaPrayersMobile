@@ -36,7 +36,7 @@ const getStyles = (colors: Colors, top: number) =>
   StyleSheet.create({
     headerContent: {
       marginTop: top,
-      paddingVertical: 16,
+      paddingVertical: 12,
       paddingHorizontal: 20,
       marginHorizontal: 16,
       minHeight: 56,
@@ -59,5 +59,6 @@ const getStyles = (colors: Colors, top: number) =>
     hamburgerButton: {
       alignItems: "center",
       justifyContent: "center",
+      padding: 8,
     },
   });
