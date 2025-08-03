@@ -74,7 +74,7 @@ const getStyles = (colors: Colors) =>
       width: "100%",
     },
     text: {
-      color: "#20A18A",
+      color: colors.primary,
       fontSize: 16,
       fontWeight: "600",
     },

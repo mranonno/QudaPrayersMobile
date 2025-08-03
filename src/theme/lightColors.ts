@@ -4,7 +4,7 @@ export const lightColors = {
   tabBackground: "#FFFFFF",
   shadow: "#999999",
   border: "#E0E0E0",
-  primary: "#008000",
+  primary: "#20A18A", //"#008000",
   primaryOpacity: "#e9f8ef",
   primaryDisabled: "#a5d6a7",
   text: "#1f1f1f",

@@ -4,7 +4,7 @@ export const darkColors = {
   tabBackground: "#272c32",
   border: "#495053",
   shadow: "#FFFFFF0D",
-  primary: "#008000",
+  primary: "#20A18A", //"#008000",
   primaryOpacity: "#1f2f25",
   primaryDisabled: "#3e604a",
   text: "#E0E0E0",
