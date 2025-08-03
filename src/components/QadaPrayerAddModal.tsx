@@ -1,12 +1,5 @@
 import React, { useMemo, useState } from "react";
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  StyleSheet,
-} from "react-native";
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import { useThemeContext } from "../theme/ThemeProvider";
@@ -43,11 +36,10 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   const [selectedPrayers, setSelectedPrayers] = useState<PrayerType[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const { colors, theme } = useThemeContext();
   const styles = useMemo(() => getStyles(colors), [colors]);
   const { addPrayer } = useGlobalContext();
-
-  const isDisabled = !(selectedDate && selectedPrayers.length > 0);
 
   const handleDateConfirm = (date: Date) => {
     setSelectedDate(date);
@@ -65,6 +57,8 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
   };
 
   const handleAdd = () => {
+    setIsSubmitted(true);
+
     if (selectedDate && selectedPrayers.length > 0) {
       const dateStr = moment(selectedDate).format("DD-MMM-YYYY");
 
@@ -79,14 +73,17 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
       });
       onAdd(dateStr, selectedPrayers);
       onClose();
+      // Reset state
       setSelectedPrayers([]);
       setSelectedDate(null);
+      setIsSubmitted(false);
     }
   };
 
   const handleCancel = () => {
     setSelectedDate(null);
     setSelectedPrayers([]);
+    setIsSubmitted(false);
     onClose();
   };
 
@@ -95,19 +92,22 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
       <View style={styles.overlay}>
         <View style={styles.container}>
           <Text style={styles.title}>Add Qada Prayer</Text>
-
-          <TouchableOpacity
-            style={styles.datePicker}
-            onPress={() => setDatePickerVisible(true)}
-          >
-            <Text style={styles.dateText}>
-              {selectedDate
-                ? moment(selectedDate).format("DD MMM YYYY")
-                : "Select Date"}
-            </Text>
-            <Ionicons name="chevron-down" size={16} color={colors.text} />
-          </TouchableOpacity>
-
+          <View style={styles.datePickerContainer}>
+            <TouchableOpacity
+              style={styles.datePicker}
+              onPress={() => setDatePickerVisible(true)}
+            >
+              <Text style={styles.dateText}>
+                {selectedDate
+                  ? moment(selectedDate).format("DD MMM YYYY")
+                  : "Select Date"}
+              </Text>
+              <Ionicons name="chevron-down" size={16} color={colors.text} />
+            </TouchableOpacity>
+            {isSubmitted && !selectedDate && (
+              <Text style={styles.errorText}>Please select a date</Text>
+            )}
+          </View>
           {PRAYERS.map((prayer) => (
             <TouchableOpacity
               activeOpacity={0.5}
@@ -143,7 +143,11 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
               </Text>
             </TouchableOpacity>
           ))}
-
+          {isSubmitted && selectedPrayers.length === 0 && (
+            <Text style={styles.errorText}>
+              Please select at least one prayer
+            </Text>
+          )}
           <View style={styles.buttonRow}>
             <LinearGradient
               colors={["#00C864", "#2D9299"]}
@@ -159,23 +163,22 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
                 <Text style={styles.cancelText}>Cancel</Text>
               </TouchableOpacity>
             </LinearGradient>
+
             <TouchableOpacity
-              activeOpacity={0.6}
-              style={{ flex: 0.55 }}
+              activeOpacity={0.7}
+              style={{ flex: 1 }}
               onPress={handleAdd}
-              disabled={isDisabled}
             >
               <LinearGradient
                 colors={["#00C864", "#2D9299"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                style={[styles.addBtn, isDisabled && { opacity: 0.6 }]}
+                style={styles.addBtn}
               >
                 <Text style={styles.addText}>Add Now</Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>
-
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
             mode="date"
@@ -211,6 +214,9 @@ const getStyles = (colors: any) =>
       textAlign: "center",
       marginBottom: 16,
     },
+    datePickerContainer: {
+      marginBottom: 16,
+    },
     datePicker: {
       flexDirection: "row",
       justifyContent: "space-between",
@@ -218,8 +224,14 @@ const getStyles = (colors: any) =>
       borderWidth: 1,
       borderColor: colors.border,
       borderRadius: 10,
+      marginBottom: 4,
       padding: 12,
-      marginBottom: 16,
+    },
+    errorText: {
+      color: colors.danger,
+      fontSize: 12,
+      paddingLeft: 4,
+      fontStyle: "italic",
     },
     dateText: {
       color: colors.text,
@@ -249,13 +261,13 @@ const getStyles = (colors: any) =>
     },
     buttonRow: {
       flexDirection: "row",
-      gap: 5,
+      gap: 16,
       alignItems: "center",
       justifyContent: "space-between",
       marginTop: 24,
     },
     cancelButtonContainer: {
-      flex: 0.42,
+      flex: 1,
       padding: 1,
       borderRadius: 10,
       alignItems: "center",

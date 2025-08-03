@@ -19,6 +19,7 @@ const LearnQadaPrayers: React.FC = () => {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
+          activeOpacity={0.6}
           style={[styles.button, { borderColor: colors.border }]}
           onPress={() => navigation.navigate("LearnVideo")}
         >
@@ -27,6 +28,7 @@ const LearnQadaPrayers: React.FC = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
+          activeOpacity={0.6}
           style={[styles.button, { borderColor: colors.border }]}
           onPress={() => navigation.navigate("LearnTextBook")}
         >
