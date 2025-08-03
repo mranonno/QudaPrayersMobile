@@ -64,6 +64,7 @@ const RemainingQadaPrayers = () => {
       </View>
       <Text style={styles.date}>{item.date}</Text>
       <TouchableOpacity
+        activeOpacity={0.6}
         style={styles.pendingStatus}
         onPress={() => openConfirmModal(item)}
       >

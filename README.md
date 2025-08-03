@@ -55,7 +55,7 @@ cd qada-prayers
 1. For OTA Update:
 
 ```bash
-eas update --branch main --message "My OTA update message"
+eas update --branch preview --message "My first OTA"
 ```
 
 2. For Preview build

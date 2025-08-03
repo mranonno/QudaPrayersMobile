@@ -13,6 +13,8 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import GlobalGradientButton from "./ui/buttons/GlobalGradientButton";
+import GlobalGradientOutlineButton from "./ui/buttons/GlobalGradientOutlineButton";
 
 interface Props {
   onClose: () => void;
@@ -75,11 +77,18 @@ const QadaConfirmModal = forwardRef<QadaConfirmModalRef, Props>(
           </Text>
 
           <View style={styles.buttonRow}>
-            <Pressable style={styles.cancelBtn} onPress={handleDismiss}>
+            {/* <Pressable style={styles.cancelBtn} onPress={handleDismiss}>
               <Text style={styles.cancelText}>Cancel</Text>
-            </Pressable>
+            </Pressable> */}
+            <GlobalGradientOutlineButton
+              title="Cancel"
+              onPress={() => {
+                handleDismiss();
+              }}
+              style={{ flex: 1 }}
+            />
 
-            <Pressable
+            {/* <Pressable
               style={styles.confirmBtn}
               onPress={() => {
                 onConfirm();
@@ -87,7 +96,15 @@ const QadaConfirmModal = forwardRef<QadaConfirmModalRef, Props>(
               }}
             >
               <Text style={styles.confirmText}>Confirm</Text>
-            </Pressable>
+            </Pressable> */}
+            <GlobalGradientButton
+              title="Confirm"
+              onPress={() => {
+                onConfirm();
+                bottomSheetModalRef.current?.dismiss();
+              }}
+              style={{ flex: 1 }}
+            />
           </View>
         </BottomSheetView>
       </BottomSheetModal>
@@ -125,27 +142,7 @@ const getStyles = (colors: any, bottom: number) =>
       flexDirection: "row",
       justifyContent: "space-between",
       marginBottom: 20,
-    },
-    cancelBtn: {
-      flex: 1,
-      padding: 12,
-      borderRadius: 10,
-      borderColor: colors.primary,
-      borderWidth: 1,
-      marginRight: 8,
-      alignItems: "center",
-    },
-    cancelText: {
-      color: colors.primary,
-      fontWeight: "500",
-    },
-    confirmBtn: {
-      flex: 1,
-      padding: 12,
-      backgroundColor: colors.primary,
-      borderRadius: 10,
-      alignItems: "center",
-      marginLeft: 8,
+      gap: 16,
     },
     confirmText: {
       color: colors.pureWhite,

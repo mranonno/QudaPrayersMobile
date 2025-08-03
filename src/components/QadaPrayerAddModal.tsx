@@ -7,6 +7,8 @@ import { Ionicons } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
 import { useGlobalContext } from "../context/GlobalContext";
 import { LinearGradient } from "expo-linear-gradient";
+import GlobalGradientButton from "./ui/buttons/GlobalGradientButton";
+import GlobalGradientOutlineButton from "./ui/buttons/GlobalGradientOutlineButton";
 
 type PrayerType = "Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha";
 
@@ -149,35 +151,16 @@ const QadaPrayerAddModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
             </Text>
           )}
           <View style={styles.buttonRow}>
-            <LinearGradient
-              colors={["#00C864", "#2D9299"]}
-              style={styles.cancelButtonContainer}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-            >
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={handleCancel}
-                style={styles.cancelBtn}
-              >
-                <Text style={styles.cancelText}>Cancel</Text>
-              </TouchableOpacity>
-            </LinearGradient>
-
-            <TouchableOpacity
-              activeOpacity={0.7}
+            <GlobalGradientOutlineButton
+              title="Cancel"
+              onPress={handleCancel}
               style={{ flex: 1 }}
+            />
+            <GlobalGradientButton
+              title="Add Now"
               onPress={handleAdd}
-            >
-              <LinearGradient
-                colors={["#00C864", "#2D9299"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.addBtn}
-              >
-                <Text style={styles.addText}>Add Now</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+              style={{ flex: 1 }}
+            />
           </View>
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
