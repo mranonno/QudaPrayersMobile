@@ -63,3 +63,9 @@ eas update --branch preview --message "My first OTA"
 ```bash
 eas build --profile preview --platform android
 ```
+
+3. For Run Project
+
+```bash
+npx expo start
+```
