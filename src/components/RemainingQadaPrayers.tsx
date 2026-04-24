@@ -2,13 +2,12 @@
 import React, { useRef, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useThemeContext } from "../theme/ThemeProvider";
-import { Ionicons } from "@expo/vector-icons";
-import QadaPrayerAddModal from "./QadaPrayerAddModal";
-import QadaConfirmModal, { QadaConfirmModalRef } from "./QadaConfirmModal";
 import { useGlobalContext } from "../context/GlobalContext";
 import moment from "moment";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
+import QadaPrayerAddModal from "./QadaPrayerAddModal";
+import QadaConfirmModal, { QadaConfirmModalRef } from "./QadaConfirmModal";
 
 type PrayerItem = {
   id: string;
@@ -28,12 +27,11 @@ const RemainingQadaPrayers = () => {
     .sort(
       (a, b) =>
         moment(a.date, "DD-MMM-YYYY").toDate().getTime() -
-        moment(b.date, "DD-MMM-YYYY").toDate().getTime()
+        moment(b.date, "DD-MMM-YYYY").toDate().getTime(),
     );
 
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [selectedPrayer, setSelectedPrayer] = useState<PrayerItem | null>(null);
-
   const confirmModalRef = useRef<QadaConfirmModalRef>(null);
 
   const openAddModal = () => setIsAddModalVisible(true);
@@ -46,13 +44,11 @@ const RemainingQadaPrayers = () => {
 
   const handleConfirmDone = () => {
     if (!selectedPrayer) return;
-
     setPrayers((prev) =>
       prev.map((p) =>
-        p.id === selectedPrayer.id ? { ...p, status: "Done" } : p
-      )
+        p.id === selectedPrayer.id ? { ...p, status: "Done" } : p,
+      ),
     );
-
     setSelectedPrayer(null);
   };
 
@@ -68,10 +64,7 @@ const RemainingQadaPrayers = () => {
         style={styles.pendingStatus}
         onPress={() => openConfirmModal(item)}
       >
-        <Text style={styles.pendingText}>
-          {item.status === "Pending" ? "Mark as Done" : "Done"}
-        </Text>
-        {/* <Ionicons name="time-outline" size={16} color={colors.pendingText} /> */}
+        <Text style={styles.pendingText}>Mark as Done</Text>
       </TouchableOpacity>
     </View>
   );
@@ -93,23 +86,23 @@ const RemainingQadaPrayers = () => {
         </View>
       ) : (
         <View>
-          <Text style={styles.title}>Remaining Qada Prayers</Text>
+          {/* Refined Header Section */}
+          <View style={styles.header}>
+            <Text style={styles.title}>Remaining Qada Prayers</Text>
+            <View style={styles.countBadge}>
+              <Text style={styles.countText}>{pendingPrayers.length}</Text>
+            </View>
+          </View>
+
           <View style={styles.separator} />
+
           <Animated.FlatList
             data={pendingPrayers}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
             scrollEnabled={false}
             itemLayoutAnimation={LinearTransition}
-            ItemSeparatorComponent={() => (
-              <View
-                style={{
-                  height: 1,
-                  backgroundColor: colors.border,
-                  marginVertical: 12,
-                }}
-              />
-            )}
+            ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
           />
         </View>
       )}
@@ -128,9 +121,7 @@ const RemainingQadaPrayers = () => {
       <QadaPrayerAddModal
         visible={isAddModalVisible}
         onClose={closeAddModal}
-        onAdd={(date, prayer) => {
-          console.log("Added Qada:", date, prayer);
-        }}
+        onAdd={(date, prayer) => console.log("Added:", date, prayer)}
       />
 
       <QadaConfirmModal
@@ -145,7 +136,7 @@ const RemainingQadaPrayers = () => {
 
 export default RemainingQadaPrayers;
 
-const getStyles = (colors: Colors) =>
+const getStyles = (colors: any) =>
   StyleSheet.create({
     container: {
       marginTop: 16,
@@ -156,18 +147,40 @@ const getStyles = (colors: Colors) =>
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
-      elevation: 20,
+      elevation: 5,
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 12,
     },
     title: {
       color: colors.text,
       fontSize: 16,
-      fontWeight: "600",
-      marginBottom: 20,
+      fontWeight: "700",
+    },
+    countBadge: {
+      backgroundColor: colors.border, // Or a very light primary color
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      borderRadius: 6,
+    },
+    countText: {
+      fontSize: 12,
+      fontWeight: "700",
+      color: colors.text,
     },
     separator: {
       height: 1,
       backgroundColor: colors.border,
-      marginBottom: 12,
+      marginBottom: 16,
+    },
+    listSeparator: {
+      height: 1,
+      backgroundColor: colors.border,
+      marginVertical: 12,
+      opacity: 0.5,
     },
     row: {
       flexDirection: "row",
@@ -177,12 +190,12 @@ const getStyles = (colors: Colors) =>
     left: {
       flexDirection: "row",
       alignItems: "center",
-      gap: 8,
-      flex: 1,
+      gap: 10,
+      flex: 1.5,
     },
     icon: {
-      width: 20,
-      height: 20,
+      width: 22,
+      height: 22,
     },
     name: {
       fontSize: 14,
@@ -190,34 +203,33 @@ const getStyles = (colors: Colors) =>
       color: colors.text,
     },
     date: {
-      fontSize: 13,
-      textAlign: "center",
+      fontSize: 12,
       color: colors.mutedText,
-      marginRight: 50,
+      flex: 1,
+      textAlign: "left",
     },
     pendingStatus: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 4,
       backgroundColor: colors.markAsDoneBackground,
       paddingHorizontal: 10,
       paddingVertical: 6,
       borderRadius: 8,
+      minWidth: 90,
+      alignItems: "center",
     },
     pendingText: {
-      fontSize: 12,
-      fontWeight: "600",
+      fontSize: 11,
+      fontWeight: "700",
       color: colors.markAsDone,
     },
+    // ... rest of your existing styles (emptyContainer, addButton, etc.)
     emptyContainer: {
       alignItems: "center",
       justifyContent: "center",
       paddingVertical: 20,
     },
     emptyImage: {
-      width: 320,
-      height: 215,
+      width: 280,
+      height: 180,
       marginVertical: 16,
       borderRadius: 12,
     },
@@ -227,15 +239,11 @@ const getStyles = (colors: Colors) =>
       fontWeight: "600",
       color: colors.primary,
     },
-    emptyText: {
-      textAlign: "center",
-      color: colors.text,
-      fontWeight: "500",
-    },
+    emptyText: { textAlign: "center", color: colors.text, fontWeight: "500" },
     suggestText: {
       textAlign: "center",
       marginHorizontal: 24,
-      fontSize: 14,
+      fontSize: 13,
       color: colors.mutedText,
     },
     addButton: {
@@ -243,11 +251,6 @@ const getStyles = (colors: Colors) =>
       paddingVertical: 14,
       borderRadius: 10,
       alignItems: "center",
-      paddingHorizontal: 24,
-      justifyContent: "center",
     },
-    addButtonText: {
-      color: colors.pureWhite,
-      fontWeight: "600",
-    },
+    addButtonText: { color: "#FFF", fontWeight: "600" },
   });
